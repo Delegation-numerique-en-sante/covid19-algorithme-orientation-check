@@ -1,0 +1,21 @@
+* Validate COVID-19 orientation algorithm data
+
+This repository is a ad hoc utility to Validate csv data produced by
+implementations of the COVID-19 orientation algorithm.
+
+* Usage
+
+You can run the tool like this:
+
+: clj -m core /home/user/data.csv
+
+* Support the Clojure(script) ecosystem
+
+If you like Clojure(script), please consider supporting maintainers by
+donating to [[https://www.clojuriststogether.org][clojuriststogether.org]].
+
+* License
+
+2020 DINUM, Bastien Guerry.
+
+The code source of this repository is published under the [[file:LICENSE][EPL 2.0 license]].
