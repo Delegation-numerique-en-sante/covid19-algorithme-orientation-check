@@ -21,8 +21,7 @@
                    :as   data}]
   (if-let [{:keys [preprocess-fn result-fn]}
            (get fn-versions algo_version)]
-    (try
-      ;; Preprocess input values
+    (try ;; Preprocess input values
       (let [computed-values      (merge data (preprocess-fn data))
             computed-orientation (result-fn computed-values)]
         ;; Check csv orientation vs valid orientation
@@ -32,11 +31,9 @@
     (println "Line" line ": algo version" algo_version "unknown")))
 
 (defn -main [& [input-csv-file]]
-  (with-open [w (clojure.java.io/writer output-filename :append true)]
-    (.write w "line,date,tested-orientation,valid-orientation\n")
-    (doseq [csv-line (map-indexed
-                      (fn [idx itm] (merge itm {:line (inc idx)}))
-                      (semantic-csv/slurp-csv input-csv-file))]
-      (when-let [err (check-line csv-line)]
-        (if (string? err)
-          (.write w err))))))
+  (spit output-filename "line,date,tested-orientation,valid-orientation\n")
+  (doseq [csv-line (map-indexed
+                    (fn [idx itm] (merge itm {:line (inc idx)}))
+                    (semantic-csv/slurp-csv input-csv-file))]
+    (when-let [err (check-line csv-line)]
+      (spit output-filename err :append true))))
