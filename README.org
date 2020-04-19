@@ -13,7 +13,7 @@ qu'elle est calculée par l'algorithme de référence.
 
 * Utilisation
 
-Vous pouvez télécharger le fichier binaire de la dernière version puis
+Vous pouvez télécharger le fichier binaire de la [[https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/releases/][dernière version]] puis
 le lancer ainsi:
 
 : ~$ covid19-algo-check fichier.csv
