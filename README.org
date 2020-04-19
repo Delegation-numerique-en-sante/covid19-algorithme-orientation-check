@@ -1,21 +1,32 @@
-* Validate COVID-19 orientation algorithm data
+* Outil de validation des données issues de l'algorithme d'orientation COVID-19
 
-This repository is a ad hoc utility to Validate csv data produced by
-implementations of the COVID-19 orientation algorithm.
+Si votre solution d'orientation COVID-19 est référencée par le
+ministère des Solidarités et de la Santé, elle implémente l'algorithme
+tel qu'il est [[https://delegation-numerique-en-sante.github.io/covid19-algorithme-orientation/][documenté ici]].
 
-* Usage
+Les fichiers ~csv~ produits par votre solution respectent notamment [[https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation/blob/master/implementation.org#variables-%C3%A0-obligatoirement-sauvegarder-pour-partage][le
+schéma de données documenté]].
 
-You can run the tool like this:
+L'outil de ce dépôt vous permet de tester un ~csv~ pour vérifier que
+l'orientation qui y est indiquée correspond à l'orientation telle
+qu'elle est calculée par l'algorithme de référence.
 
-: clj -m core /home/user/data.csv
+* Utilisation
 
-* Support the Clojure(script) ecosystem
+Vous pouvez télécharger le fichier binaire de la dernière version puis
+le lancer ainsi:
 
-If you like Clojure(script), please consider supporting maintainers by
-donating to [[https://www.clojuriststogether.org][clojuriststogether.org]].
+: ~$ covid19-algo-check fichier.csv
 
-* License
+Deux fichiers seront produits:
+
+- covid19-algo-check-2020-04-18.csv : contenant la liste des erreurs
+  concernant l'orientation.
+
+- covid19-algo-check-2020-04-18.txt : contenant d'autres erreurs.
+
+* Licence
 
 2020 DINUM, Bastien Guerry.
 
-The code source of this repository is published under the [[file:LICENSE][EPL 2.0 license]].
+Le code source de ce dépôt est publié sous [[file:LICENSE][EPL 2.0 license]].
