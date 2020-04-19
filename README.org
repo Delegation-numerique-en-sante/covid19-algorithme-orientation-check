@@ -25,6 +25,10 @@ Deux fichiers seront produits:
 
 - covid19-algo-check-2020-04-18.txt : contenant d'autres erreurs.
 
+* Compatibilité
+
+Le fichier binaire est compilé pour les architectures *Linux 64 bits*.
+
 * Licence
 
 2020 DINUM, Bastien Guerry.
