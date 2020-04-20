@@ -13,7 +13,7 @@
   (str today "-covid19-orientation-check.csv"))
 
 (def output-txt-filename
-  (str today "-~covid19-errors.txt"))
+  (str today "-covid19-errors.txt"))
 
 (def errors (agent nil))
 
