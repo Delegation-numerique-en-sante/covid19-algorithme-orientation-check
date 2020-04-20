@@ -41,9 +41,11 @@
         ;; Then check csv orientation vs valid orientation
         (when-not (= orientation computed-orientation)
           (str (s/join "," [line date orientation computed-orientation]) "\n")))
-      (catch Exception _ (println "Error line" line)))
+      (catch Exception _
+        (send errors conj
+              (format "Line %s: cannot apply algo %s" line algo_version))))
     (send errors conj
-          (str "Line" line ": algo version" algo_version "unknown\n"))))
+          (format "Line %s: algo_version %s unknown\n" line algo_version))))
 
 (defn -main [& [input-csv-file]]
   ;; Prepare the csv
@@ -59,5 +61,3 @@
     (spit output-txt-filename err :append true))
   ;; Stop the agent
   (System/exit 0))
-
-
