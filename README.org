@@ -1,4 +1,4 @@
-* Outil de validation des données issues de l'algorithme d'orientation Covid-19
+* Schéma et validation des données issues des questionnaires d'orientation Covid-19
 
 Si votre solution d'orientation COVID-19 est référencée par le
 ministère des Solidarités et de la Santé, elle implémente [[https://delegation-numerique-en-sante.github.io/covid19-algorithme-orientation/][l'algorithme
