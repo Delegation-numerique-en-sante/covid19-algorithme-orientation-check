@@ -1,29 +1,39 @@
-* Outil de validation des données issues de l'algorithme d'orientation COVID-19
+* Outil de validation des données issues de l'algorithme d'orientation Covid-19
 
 Si votre solution d'orientation COVID-19 est référencée par le
-ministère des Solidarités et de la Santé, elle implémente l'algorithme
-tel qu'il est [[https://delegation-numerique-en-sante.github.io/covid19-algorithme-orientation/][documenté ici]].
+ministère des Solidarités et de la Santé, elle implémente [[https://delegation-numerique-en-sante.github.io/covid19-algorithme-orientation/][l'algorithme
+d'orientation Covid-19]].
 
-Les fichiers ~csv~ produits par votre solution respectent notamment [[https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation/blob/master/implementation.org#variables-%C3%A0-obligatoirement-sauvegarder-pour-partage][le
-schéma de données documenté]].
+Ce dépôt expose le *schéma de données* de la dernière version de cette
+documentation et propose en un *outil de validation* des fichiers ~csv~
+envoyés par les producteurs de données.
 
-L'outil de ce dépôt vous permet de tester un ~csv~ pour vérifier que
-l'orientation qui y est indiquée correspond à l'orientation telle
-qu'elle est calculée par l'algorithme de référence.
+* Schéma de données
 
-* Utilisation
+Les fichiers ~csv~ produits par votre solution doivent respecter [[https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation/blob/master/implementation.org#variables-%C3%A0-obligatoirement-sauvegarder-pour-partage][les
+instructions d'implémentation]] et le [[file:schema.json][schéma de données]] (au format
+[[https://frictionlessdata.io/table-schema/][TableSchema]]) de ce dépôt.
+
+Pour produire le fichier ~schema.json~:
+
+: ~$ clojure -m schema 2020-04-17
+
+* Outil de validation
+
+L'outil de validation permet de tester un ~csv~ pour vérifier que les
+données correspondent au schéma de données et que le message
+d'orientation du csv correspond au message d'orientation calculé par
+l'algorithme de référence.
 
 Vous pouvez télécharger le fichier binaire de la [[https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/releases/][dernière version]] puis
 le lancer ainsi:
 
 : ~$ covid19-algo-check fichier.csv
 
-Deux fichiers seront produits:
+Deux fichiers seront écrits:
 
-- covid19-algo-check-2020-04-18.csv : contenant la liste des erreurs
-  concernant l'orientation.
-
-- covid19-algo-check-2020-04-18.txt : contenant d'autres erreurs.
+- 2020-04-18-~covid19-orientation-check.csv~ : contenant la liste des erreurs concernant l'orientation.
+- 2020-04-18-~covid19-errors.txt~ : contenant les autres erreurs.
 
 * Compatibilité
 
