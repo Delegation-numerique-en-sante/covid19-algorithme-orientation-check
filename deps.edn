@@ -1,4 +1,4 @@
-{:version     "0.1.0"
+{:version     "0.2.0"
  :description "Validate csv data produced by implementations of the COVID-19 orientation algorithm."
  :url         "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check"
  :license     {:name "Eclipse Public License - v 2.0"
