@@ -1,4 +1,4 @@
-(ns algos
+(ns algo
   (:require [clojure.edn :as edn]))
 
 (defn normalize [^String s]

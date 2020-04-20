@@ -1,7 +1,7 @@
 (ns core
   (:require [clojure.string :as s]
             [semantic-csv.core :as semantic-csv]
-            [algos :as algos]
+            [algo :as algo]
             [clojure.edn :as edn]
             [java-time :as t])
   (:gen-class))
@@ -13,10 +13,10 @@
   (str "covid19-algo-check-" today ".txt"))
 
 (def fn-versions
-  {"2020-04-06" {:result-fn     #'algos/result-2020-04-06
-                 :preprocess-fn #'algos/preprocess-2020-04-06}
-   "2020-04-17" {:result-fn     #'algos/result-2020-04-17
-                 :preprocess-fn #'algos/preprocess-2020-04-17}})
+  {"2020-04-06" {:result-fn     #'algo/result-2020-04-06
+                 :preprocess-fn #'algo/preprocess-2020-04-06}
+   "2020-04-17" {:result-fn     #'algo/result-2020-04-17
+                 :preprocess-fn #'algo/preprocess-2020-04-17}})
 
 (def errors (agent nil))
 
