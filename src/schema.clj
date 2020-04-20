@@ -2,8 +2,8 @@
   (:require [cheshire.core :as json]))
 
 (def schema-2020-04-06
-  {:title       "Spécification des données issue des questionnaires d'orientation Covid-19"
-   :description "Spécification des données issue des questionnaires d'orientation Covid-19"
+  {:title       "Spécification des données issues des questionnaires d'orientation Covid-19"
+   :description "Spécification des données issues des questionnaires d'orientation Covid-19"
    :author      "Délégation numérique en santé - ministère des Solidarités et de la Santé"
    :contact     "mobilisation-covid@sante.gouv.fr"
    :contributor "Direction interministérielle du numérique"
@@ -232,7 +232,6 @@
 (def schemas {"2020-04-06" schema-2020-04-06
               "2020-04-17" schema-2020-04-17})
 
-(defn make-schema [version]
+(defn -main [& [version]]
   (spit "schema.json"
         (json/generate-string (get schemas version)  {:pretty true})))
-
