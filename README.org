@@ -32,8 +32,8 @@ le lancer ainsi:
 
 Deux fichiers seront écrits:
 
-- 2020-04-18-~covid19-orientation-check.csv~ : contenant la liste des erreurs concernant l'orientation.
-- 2020-04-18-~covid19-errors.txt~ : contenant les autres erreurs.
+- ~2020-04-18-covid19-orientation-check.csv~ : contenant la liste des erreurs concernant l'orientation.
+- ~2020-04-18-covid19-errors.txt~ : contenant les autres erreurs.
 
 * Compatibilité
 
