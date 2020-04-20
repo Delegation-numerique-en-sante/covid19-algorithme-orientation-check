@@ -1,10 +1,8 @@
-
 # Schéma et validation des données issues des questionnaires d'orientation Covid-19
 
 Si votre solution d'orientation COVID-19 est référencée par le ministère des Solidarités et de la Santé, elle implémente [l'algorithme d'orientation Covid-19](https://delegation-numerique-en-sante.github.io/covid19-algorithme-orientation/).
 
 Ce dépôt expose le **schéma de données** de la dernière version de cette documentation et propose en un **outil de validation** des fichiers `csv` envoyés par les producteurs de données.
-
 
 # Schéma de données
 
@@ -14,10 +12,15 @@ Pour produire le fichier `schema.json`:
 
     ~$ clojure -m schema 2020-04-17
 
+# Validation de la conformité d'un fichier `csv` à ce schéma
 
-# Outil de validation
+Le schéma publié dans ce dépôt suit les spécifications TableSchema.
 
-L'outil de validation permet de tester un `csv` pour vérifier que les données correspondent au schéma de données et que le message d'orientation du csv correspond au message d'orientation calculé par l'algorithme de référence.
+Vous pouvez utiliser un outil comme [goodtables](https://github.com/frictionlessdata/goodtables-py) pour vérifier que vos fichiers `csv` sont conformes à ce schéma.
+
+# Validation de la conformité d'un fichier `csv` à l'algorithme d'orientation
+
+L'outil de validation disponible depuis ce dépôt permet de vérifier que le message d'orientation contenu dans le champ `orientation` de votre `csv` correspond au message d'orientation calculé par l'algorithme d'orientation de [référence](https://delegation-numerique-en-sante.github.io/covid19-algorithme-orientation/).
 
 Vous pouvez télécharger le fichier binaire de la [dernière version](https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/releases/) puis le lancer ainsi:
 
@@ -28,11 +31,11 @@ Deux fichiers seront écrits:
 -   `2020-04-18-covid19-orientation-check.csv` : contenant la liste des erreurs concernant l'orientation.
 -   `2020-04-18-covid19-errors.txt` : contenant les autres erreurs.
 
+Notez que cet outil de validation permet *aussi* de vérifier la conformité du fichier au schéma de données.
 
 # Compatibilité
 
-Le fichier binaire est compilé pour les architectures **Linux 64 bits**.
-
+Le fichier binaire est compilé pour des architectures **Linux 64 bits**.
 
 # Licence
 
