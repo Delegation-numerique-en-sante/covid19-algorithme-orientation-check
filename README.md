@@ -28,6 +28,10 @@ Ce dépôt contient un exemple de `csv` pour la dernière version du schéma, `2
 
 **Attention**: les données de ce fichier sont générées aléatoirement: les fichiers respectent le schéma mais les données qu'il contient ne respectent pas l'algorithme d'orientation.
 
+## Vous souhaitez publier des données anonymisées ?
+
+Nous vous invitons à respecter le schéma de données, prendre contact avec `mobilisation-covid@sante.gouv.fr` pour leur indiquer que vous souhaitez partager vos données avec le ministère des Solidarités et de la Santé et à publier vos données anonymisées sur [data.gouv.fr](https://www.data.gouv.fr/fr/).
+
 ## Validation de la conformité d'un fichier `csv` à ce schéma
 
 Le schéma publié dans ce dépôt suit les spécifications TableSchema.
