@@ -4,7 +4,7 @@
             [java-time :as t]
             [semantic-csv.core :as sc]))
 
-(s/def ::id uuid?)
+;; (s/def ::id uuid?)
 
 (s/def ::algo_version
   (s/with-gen (s/and string? #(re-matches #"^\d{4}-\d{2}-\d{2}$" %))

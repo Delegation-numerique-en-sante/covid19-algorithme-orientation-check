@@ -13,13 +13,13 @@
    :homepage    "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-schema"
    :example     "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-schema/blob/master/exemple.csv"
    :fields
-   [{:name        "id"
-     :description "Un identifiant unique pour la réponse"
-     :example     "1e0dfed7-503a-4f21-8517-f0d0081495ce"
-     :type        "string"
-     :format      "uuid"
-     :constraints {:required true
-                   :unique   true}}
+   [;; {:name        "id"
+    ;;  :description "Un identifiant unique pour la réponse"
+    ;;  :example     "1e0dfed7-503a-4f21-8517-f0d0081495ce"
+    ;;  :type        "string"
+    ;;  :format      "uuid"
+    ;;  :constraints {:required true
+    ;;                :unique   true}}
 
     {:name        "algo_version"
      :description "Le numéro de version de l'algorithme d'orientation Covid-19"
