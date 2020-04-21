@@ -13,41 +13,48 @@
    :homepage    "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-schema"
    :example     "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-schema/blob/master/exemple.csv"
    :fields
-   [{:name        "algo_version"
-     :description "Le numéro de version de l'algorithme"
-     :example     "2020-04-17"
+   [{:name        "id"
+     :description "Un identifiant unique pour la réponse"
+     :example     "1e0dfed7-503a-4f21-8517-f0d0081495ce"
      :type        "string"
-     :constraints {:pattern  "^\\d{4}-\\d{2}-\\d{2}$"
-                   :required true}}
+     :format      "uuid"
+     :constraints {:required true
+                   :unique   true}}
+
+    {:name        "algo_version"
+     :description "Le numéro de version de l'algorithme d'orientation Covid-19"
+     :example     "2020-04-17"
+     :type        "date"
+     :constraints {:required true}}
 
     {:name        "form_version"
-     :description "Le numéro de version du formulaire"
+     :description "Le numéro de version du formulaire de saisie"
      :example     "2020-04-17"
-     :type        "string"
-     :constraints {:pattern  "^\\d{4}-\\d{2}-\\d{2}$"
-                   :required true}}
+     :type        "date"
+     :constraints {:required true}}
 
     {:name        "date"
-     :description "Date de saisie du questionnaire"
-     :example     "2020-04-02T05:24:57.711-00:00"
+     :description "La date de saisie du questionnaire"
+     :example     "2020-04-02T05:24:57Z"
      :type        "datetime"
      :constraints {:required true}}
 
     {:name        "duration"
-     :description "Durée de la saisie en secondes"
+     :description "La durée de la saisie du questionnaire"
      :example     126
      :type        "integer"
-     :constraints {:required true}}
+     :constraints {:required true
+                   :minimum  0}}
 
     {:name        "postal_code"
-     :description "Code postal du lieu de résidence actuel"
+     :description "Le code postal du lieu de résidence actuel"
      :example     "75019"
      :type        "string"
-     :constraints {:pattern  "^\\d{2}.{3}+$"
+     :constraints {:pattern  "^\\d.{4}$"
                    :required false}}
 
     {:name        "orientation"
-     :description "Identifiant du message d'orientation envoyé"
+     :description "L'identifiant du message d'orientation envoyé au répondant"
      :example     "orientation_SAMU"
      :type        "string"
      :constraints {:enum     ["orientation_SAMU"
@@ -59,49 +66,53 @@
                               "orientation_surveillance"]
                    :required true}}
 
-    {:name        "id"
-     :description "Identifiant unique"
-     :example     "1e0dfed7-503a-4f21-8517-f0d0081495ce"
-     :type        "string"
-     :format      "uuid"
-     :constraints {:required true
-                   :unique   true}}
-
     {:name        "age_range"
-     :description "Tranche d'âge"
+     :description "La tranche d'âge dans laquelle se situe le répondant"
      :example     "from_15_to_49"
      :type        "string"
      :constraints {:enum     ["inf_15" "from_15_to_49"
                               "from_50_to_69" "sup_70"]
                    :required true}}
 
-    {:name        "sore_throat_aches"
-     :description "Mal de gorge ou douleurs musculaires"
-     :example     true
-     :type        "boolean"
-     :constraints {:required true}}
+    {:name        "imc"
+     :description "Indice de masse corporelle"
+     :example     "29.2"
+     :type        "number"
+     :constraints {:required true
+                   :minimum  10
+                   :maximum  70}}
 
-    {:name        "agueusia_anosmia"
-     :description "Perte de goût ou d'odorat"
+    {:name        "feeding_day"
+     :description "Difficulté à boire ou se nourrir dans les dernières 24 heures"
      :example     true
      :type        "boolean"
      :constraints {:required true}}
 
     {:name        "breathlessness"
-     :description "Essoufflement"
+     :description "Apparition d'un manque de souffle inhabituel"
      :example     true
      :type        "boolean"
      :constraints {:required true}}
 
-    {:name        "cough"
-     :description "Toux"
-     :example     true
-     :type        "boolean"
-     :constraints {:required true}}
+    {:name        "fever"
+     :description "Réponse à la question posée sur la fièvre"
+     :example     999
+     :type        "number"
+     ;; 999 correspond à "Je ne sais pas"
+     :constraints {:enum     [0 1 999]
+                   :required true}}
 
-    {:name        "diarrhea"
-     :description "Diarrhée"
-     :example     true
+    {:name        "temperature_cat"
+     :description "Température la plus élevée ces dernières 48 heures"
+     :example     "35.5-37.7"
+     :type        "string"
+     :constraints {:enum     ["inf_35.5" "35.5-37.7"
+                              "37.8-38.9" "sup_39" "NSP"]
+                   :required true}}
+
+    {:name        "fever_algo"
+     :description "Calcul du facteur fièvre"
+     :example     false
      :type        "boolean"
      :constraints {:required true}}
 
@@ -117,20 +128,26 @@
      :type        "boolean"
      :constraints {:required false}}
 
-    {:name        "imc"
-     :description "Indice de masse corporelle"
-     :example     "29.2"
-     :type        "number"
-     :constraints {:required true}}
-
-    {:name        "breathing_disease"
-     :description "Maladie respiratoire"
+    {:name        "cough"
+     :description "Toux"
      :example     true
      :type        "boolean"
      :constraints {:required true}}
 
-    {:name        "cancer"
-     :description "Cancer actuel ou il y a moins de trois ans"
+    {:name        "agueusia_anosmia"
+     :description "Perte de goût ou d'odorat"
+     :example     true
+     :type        "boolean"
+     :constraints {:required true}}
+
+    {:name        "sore_throat_aches"
+     :description "Apparition de maux de gorge, douleurs musculaires ou courbatures inhabituelles"
+     :example     true
+     :type        "boolean"
+     :constraints {:required true}}
+
+    {:name        "diarrhea"
+     :description "Diarrhée"
      :example     true
      :type        "boolean"
      :constraints {:required true}}
@@ -141,14 +158,20 @@
      :type        "boolean"
      :constraints {:required true}}
 
-    {:name        "feeding_day"
-     :description "Difficulté à boire ou se nourrir dans les dernières 24 heures"
+    {:name        "cancer"
+     :description "Cancer en cours ou il y a moins de trois ans"
+     :example     true
+     :type        "boolean"
+     :constraints {:required true}}
+
+    {:name        "breathing_disease"
+     :description "Maladie respiratoire ou suivi pneumologique"
      :example     true
      :type        "boolean"
      :constraints {:required true}}
 
     {:name        "kidney_disease"
-     :description "Insuffisance rénale"
+     :description "Insuffisance rénale chronique dialysée"
      :example     true
      :type        "boolean"
      :constraints {:required true}}
@@ -160,37 +183,18 @@
      :constraints {:required true}}
 
     {:name        "pregnant"
-     :description "Maladie chronique du foie"
+     :description "La personne est-elle enceinte"
      :example     888
      :type        "number"
+     ;; 888 correspond à "Je ne sais pas"
      :constraints {:enum     [0 1 888]
                    :required true}}
-
-    {:name        "temperature_cat"
-     :description "Température"
-     :example     "35.5-37.7"
-     :type        "string"
-     :constraints {:enum     ["inf_35.5" "35.5-37.7"
-                              "37.8-38.9" "sup_39" "NSP"]
-                   :required true}}
-
-    {:name        "fever"
-     :description "Avez-vous de la fièvre?"
-     :example     999
-     :type        "number"
-     :constraints {:enum     [0 1 999]
-                   :required true}}
-    
-    {:name        "fever_algo"
-     :description "Calcul du facteur fièvre"
-     :example     false
-     :type        "boolean"
-     :constraints {:required true}}
 
     {:name        "heart_disease"
      :description "Maladie cardiaque"
      :example     999
      :type        "number"
+     ;; 999 correspond à "Je ne sais pas"
      :constraints {:enum     [0 1 999]
                    :required true}}
 
@@ -200,38 +204,43 @@
      :type        "boolean"
      :constraints {:required true}}
 
-    {:name        "immuonsuppressant_disease"
+    {:name        "immunosuppressant_disease"
      :description "Maladie défenses immunitaires"
      :example     999
      :type        "number"
+     ;; 999 correspond à "Je ne sais pas"
      :constraints {:enum     [0 1 999]
                    :required true}}
 
-    {:name        "immuonsuppressant_disease_algo"
+    {:name        "immunosuppressant_disease_algo"
      :description "Maladie défenses immunitaires"
      :example     false
      :type        "boolean"
      :constraints {:required true}}
 
-    {:name        "immuonsuppressant_drug"
+    {:name        "immunosuppressant_drug"
      :description "Traitement immunodépresseur"
      :example     999
      :type        "number"
+     ;; 999 correspond à "Je ne sais pas"
      :constraints {:enum     [0 1 999]
                    :required true}}
 
-    {:name        "immuonsuppressant_drug_algo"
+    {:name        "immunosuppressant_drug_algo"
      :description "Traitement immunodépresseur"
      :example     false
      :type        "boolean"
      :constraints {:required true}}]})
 
 (def schema-2020-04-17
-  (update schema-2020-04-06 :fields #(remove (fn [f] (= (:name f) "fever")) %)))
+  (update schema-2020-04-06
+          :fields #(remove (fn [f] (= (:name f) "fever")) %)))
 
 (def schemas {"2020-04-06" schema-2020-04-06
               "2020-04-17" schema-2020-04-17})
 
-(defn -main [& [version]]
+(defn generate [& [version]]
   (spit "schema.json"
-        (json/generate-string (get schemas version)  {:pretty true})))
+        (json/generate-string
+         (get schemas (or version "2020-04-17"))
+         {:pretty true})))
