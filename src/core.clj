@@ -11,10 +11,10 @@
 (def today (t/local-date))
 
 (def output-schema-filename
-  (str today "-covid19-schema-errors.csv"))
+  (str today "-covid19-schema-errors.txt"))
 
 (def output-algo-filename
-  (str today "-covid19-algo-errors.txt"))
+  (str today "-covid19-algo-errors.csv"))
 
 (def errors (atom nil))
 
@@ -69,21 +69,18 @@
     (let [input-data (csv-to-data input-csv-file)]
       (doseq [data input-data] (check-schema data))
       (if (empty? @errors)
-        (println "All entries have a valid schema")
-        (doseq [err (reverse @errors)]
-          (spit output-schema-filename "")
-          (spit output-schema-filename err :append true))))
+        (println "Success! This csv schema is valid.")
+        (do (doseq [err (reverse @errors)]
+              (spit output-schema-filename "")
+              (spit output-schema-filename err :append true))
+            (println "!!! Errors stored in" output-schema-filename))))
     "check-algo"
     (let [input-data (csv-to-data input-csv-file)]
       (doseq [data input-data] (check-algo data))
       (if (empty? @errors)
-        (println "All entries have a correct orientation value")
+        (println "Success! All entries have a correct orientation value.")
         (do (spit output-algo-filename
                   "line,date,tested-orientation,valid-orientation\n")
             (doseq [err (reverse @errors)]
-              (spit output-algo-filename err :append true)))))))
-
-;; (-main "make-csv")
-;; (-main "make-schema")
-;; (-main "check-algo" "2020-04-17-example.csv")
-;; (-main "check-schema" "2020-04-17-example.csv")
+              (spit output-algo-filename err :append true))
+            (println "!!! Errors stored in" output-algo-filename))))))
