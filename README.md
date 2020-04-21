@@ -2,15 +2,31 @@
 
 Si votre solution d'orientation COVID-19 est référencée par le ministère des Solidarités et de la Santé, elle implémente [l'algorithme d'orientation Covid-19](https://delegation-numerique-en-sante.github.io/covid19-algorithme-orientation/).
 
-Ce dépôt expose le **schéma de données** de la dernière version de cette documentation et propose en un **outil de validation** des fichiers `csv` envoyés par les producteurs de données.
+Ce dépôt expose le **schéma de données** de la dernière version de cette documentation et propose un **outil de validation** des fichiers `csv` envoyés par les producteurs de données.
+
+Résumé des commandes:
+
+	# Générer le schéma:
+	~$ java -cp covid19-check.jar clojure.main -m core make-schema
+
+	# Générer le fichier `csv` d'exemple:
+	~$ java -cp covid19-check.jar clojure.main -m core make-csv
+
+	# Tester le schéma d'un fichier csv:
+	~$ java -cp covid19-check.jar clojure.main -m core check-schema 2020-04-17-example.csv
+
+	# Tester la validité des messages d'orientation contenus dans un csv:
+	~$ java -cp covid19-check.jar clojure.main -m core check-algo 2020-04-17-example.csv
 
 # Schéma de données
 
 Les fichiers `csv` produits par votre solution doivent respecter [les instructions d'implémentation](https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation/blob/master/implementation.org#variables-%C3%A0-obligatoirement-sauvegarder-pour-partage) et le [schéma de données](schema.json) (au format [TableSchema](https://frictionlessdata.io/table-schema/)) de ce dépôt.
 
-Pour produire le fichier `schema.json`:
+# Exemples
 
-    ~$ clojure -m schema 2020-04-17
+Ce dépôt contient un exemple de `csv` pour la dernière version du schéma, `2020-04-17-example.csv`.
+
+**Attention**: les données de ce fichier sont générées aléatoirement: les fichiers respectent le schéma mais les données qu'il contient ne respectent pas l'algorithme d'orientation.
 
 # Validation de la conformité d'un fichier `csv` à ce schéma
 
@@ -20,18 +36,9 @@ Vous pouvez utiliser un outil comme [goodtables](https://github.com/frictionless
 
 # Validation de la conformité d'un fichier `csv` à l'algorithme d'orientation
 
-L'outil de validation disponible depuis ce dépôt permet de vérifier que le message d'orientation contenu dans le champ `orientation` de votre `csv` correspond au message d'orientation calculé par l'algorithme d'orientation de [référence](https://delegation-numerique-en-sante.github.io/covid19-algorithme-orientation/).
+L'outil de validation disponible depuis ce dépôt (`covid19-check.jar`) permet de vérifier que le message d'orientation contenu dans le champ `orientation` de votre `csv` correspond au message d'orientation calculé par l'algorithme d'orientation de [référence](https://delegation-numerique-en-sante.github.io/covid19-algorithme-orientation/).
 
-Vous pouvez télécharger le fichier binaire de la [dernière version](https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/releases/) puis le lancer ainsi:
-
-    ~$ covid19-algo-check fichier.csv
-
-Deux fichiers seront écrits:
-
--   `2020-04-18-covid19-orientation-check.csv` : contenant la liste des erreurs concernant l'orientation.
--   `2020-04-18-covid19-errors.txt` : contenant les autres erreurs.
-
-Notez que cet outil de validation permet *aussi* de vérifier la conformité du fichier au schéma de données.
+Vous pouvez télécharger le fichier binaire de la [dernière version](https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/releases/).
 
 # Compatibilité
 
