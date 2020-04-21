@@ -5,7 +5,6 @@
   (let [val-s (edn/read-string s)]
     (condp #(= %1 (type %2)) val-s
       java.lang.Boolean val-s
-      java.lang.Double  val-s
       java.lang.Long    (condp = val-s 1 true 0 false val-s))))
 
 (defn preprocess-2020-04-06
@@ -24,7 +23,7 @@
         pronostic-factors      (atom 0)]
     ;; Compute pronostic factors
     (when (= age_range "sup_70") (swap! pronostic-factors inc))
-    (when (>= (normalize imc) 30) (swap! pronostic-factors inc))
+    (when (>= imc 30) (swap! pronostic-factors inc))
     (when (normalize heart_disease_algo) (swap! pronostic-factors inc))
     (when (normalize immunosuppressant_disease_algo) (swap! pronostic-factors inc))
     (when (normalize immunosuppressant_drug_algo) (swap! pronostic-factors inc))
