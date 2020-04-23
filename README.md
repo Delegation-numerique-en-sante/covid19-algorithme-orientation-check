@@ -42,7 +42,7 @@ Vous pouvez utiliser un outil comme [goodtables](https://github.com/frictionless
 
 L'outil de validation disponible depuis ce dépôt (`covid19-check.jar`) permet de vérifier que le message d'orientation contenu dans le champ `orientation` de votre `csv` correspond au message d'orientation calculé par l'algorithme d'orientation de [référence](https://delegation-numerique-en-sante.github.io/covid19-algorithme-orientation/).
 
-Vous pouvez télécharger le fichier binaire de la [dernière version](https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/releases/).
+Vous pouvez télécharger le fichier `jar` de la [dernière version](https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/releases/).
 
 ## Licence
 
