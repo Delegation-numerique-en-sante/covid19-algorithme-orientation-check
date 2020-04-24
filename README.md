@@ -9,13 +9,13 @@ Résumé des commandes:
 	# Générer le schéma:
 	~$ java -cp covid19-check.jar clojure.main -m core make-schema
 
-	# Générer le fichier `csv` d'exemple:
+	# Générer un fichier csv d'exemple:
 	~$ java -cp covid19-check.jar clojure.main -m core make-csv
 
 	# Tester le schéma d'un fichier csv:
 	~$ java -cp covid19-check.jar clojure.main -m core check-schema 2020-04-17-example.csv
 
-	# Tester la validité des messages d'orientation contenus dans un csv:
+	# Tester la validité des messages d'orientation du fichier csv:
 	~$ java -cp covid19-check.jar clojure.main -m core check-algo 2020-04-17-example.csv
 
 ## Schéma de données
@@ -25,8 +25,6 @@ Les fichiers `csv` produits par votre solution doivent respecter [les instructio
 ## Exemples
 
 Ce dépôt contient un exemple de `csv` pour la dernière version du schéma, `2020-04-17-example.csv`.
-
-**Attention**: les données de ce fichier sont générées aléatoirement: les fichiers respectent le schéma mais les données qu'il contient ne respectent pas l'algorithme d'orientation.
 
 ## Vous souhaitez publier des données anonymisées ?
 
@@ -49,4 +47,3 @@ Vous pouvez télécharger le fichier `jar` de la [dernière version](https://git
 2020 DINUM, Bastien Guerry.
 
 Le code source de ce dépôt est publié sous [EPL 2.0 license](LICENSE).
-
