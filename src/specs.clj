@@ -1,40 +1,50 @@
 (ns specs
   (:require [clojure.spec.alpha :as s]
             [clojure.spec.gen.alpha :as gen]
-            [java-time :as t]
-            [semantic-csv.core :as sc]))
+            [const :as const]
+            [java-time :as t]))
 
 ;; (s/def ::id uuid?)
 
 (s/def ::algo_version
-  (s/with-gen (s/and string? #(re-matches #"^\d{4}-\d{2}-\d{2}$" %))
-    #(s/gen #{"2020-04-06" "2020-04-17"})))
+  (s/with-gen
+    (s/and string? #(re-matches #"^\d{4}-\d{2}-\d{2}$" %))
+    #(s/gen #{"2020-04-17"})))
 
 (s/def ::form_version ::algo_version)
 
 (s/def ::postal_code
-  (s/with-gen (s/and string? #(re-matches #"^$|^\d{1}.{4}$" %))
-    #(s/gen #{"69000" "33260" "97416" "78000"})))
+  (s/with-gen
+    (s/and string? #(re-matches #"^$|^\d{1}.{4}$" %))
+    #(s/gen const/postal-codes)))
 
 (s/def ::age_range
   #{"inf_15" "from_15_to_49" "from_50_to_69" "sup_70"})
 
 (s/def ::date
-  (s/with-gen (s/and string? #(t/local-date %))
-    #(s/gen #{"2020-04-20" "2020-04-21" "2020-04-22"})))
+  (s/with-gen
+    (s/and string? #(t/local-date %))
+    #(s/gen
+      (into
+       #{} (map (fn [n] (str (t/plus (t/local-date) (t/days n))))
+                (range 50))))))
 
-(def duration-min 0)
+(def duration-min 30)
 (def duration-max 2000)
+
 (s/def ::duration (s/and nat-int? #(> % duration-min) #(< % duration-max)))
 
 (def imc-min 10)
 (def imc-max 70)
+
 (s/def ::imc
-  (s/with-gen (s/or :integer (s/and nat-int? )
-                    ::float (s/and float? #(> % imc-min) #(< % imc-max)))
+  (s/with-gen
+    (s/or :integer (s/and nat-int? )
+          ::float (s/and float? #(> % imc-min) #(< % imc-max)))
     #(s/gen #{30 28.7 29.2 31.9 34.2 26})))
 
-(s/def ::orientation #{"orientation_SAMU"
+(s/def ::orientation #{"orientation_moins_de_15_ans"
+                       "orientation_SAMU"
                        "orientation_domicile_surveillance_1"
                        "orientation_surveillance"
                        "orientation_consultation_surveillance_1"
@@ -42,17 +52,34 @@
                        "orientation_consultation_surveillance_3"
                        "orientation_consultation_surveillance_4"})
 
-(s/def ::nsp #{"0" "1" "999"})
-(s/def ::fever ::nsp)
-(s/def ::heart_disease ::nsp)
-(s/def ::immunosuppressant_disease ::nsp)
-(s/def ::immunosuppressant_drug ::nsp)
-(s/def ::pregnant #{"0" "1" "888"})
+(s/def ::myboolean-nsp
+  (s/with-gen
+    (s/or :bool #{"false" "true"}
+          :bin #{"0" "1"}
+          :nsp #{"999"})
+    #(s/gen #{"false" "true" "999"})))
+
+(s/def ::fever ::myboolean-nsp)
+(s/def ::heart_disease ::myboolean-nsp)
+(s/def ::immunosuppressant_disease ::myboolean-nsp)
+(s/def ::immunosuppressant_drug ::myboolean-nsp)
+
+(s/def ::myboolean-na
+  (s/with-gen
+    (s/or :bool #{"false" "true"}
+          :bin #{"0" "1"}
+          :nsp #{"888"})
+    #(s/gen #{"false" "true" "888"})))
+
+(s/def ::pregnant ::myboolean-na)
+
 (s/def ::temperature_cat
   #{"inf_35.5" "35.5-37.7" "37.8-38.9" "sup_39" "NSP"})
 
 (s/def ::myboolean
-  (s/with-gen (s/or :bool #{"false" "true"} :bin #{"0" "1"})
+  (s/with-gen
+    (s/or :bool #{"false" "true"}
+          :bin #{"0" "1"})
     #(s/gen #{"false" "true"})))
 
 (s/def ::agueusia_anosmia ::myboolean)
@@ -143,56 +170,21 @@
                    ]
           :opt-un [::postal_code]))
 
+(defn generate-response [version]
+  (s/gen
+   (condp = version
+     "2020-04-17" ::response-2020-04-17
+     "2020-04-06" ::response-2020-04-06
+     nil?)))
+
+(defn generate-samples [version number]
+  (or (->> (gen/sample (generate-response version) number)
+           (remove nil?)
+           not-empty)
+      (println "Cannot generate sample for version" version)))
+
 (defn valid-response [r version]
   (condp = version
     "2020-04-06" (s/valid? ::response-2020-04-06 r)
     "2020-04-17" (s/valid? ::response-2020-04-17 r)
     false))
-
-(defn generate-csv-examples [& [version]]
-  (let [version (or version "2020-04-17")
-        header  (condp = version
-                  "2020-04-17" [ ;; :id
-                                :algo_version :form_version :date
-                                :duration :postal_code :orientation
-                                :age_range :imc :feeding_day :breathlessness
-                                :fever :temperature_cat :fever_algo
-                                :tiredness :tiredness_details :cough
-                                :agueusia_anosmia :sore_throat_aches
-                                :diarrhea :diabetes :cancer
-                                :breathing_disease :kidney_disease
-                                :liver_disease :pregnant
-                                :heart_disease :heart_disease_algo
-                                :immunosuppressant_disease
-                                :immunosuppressant_disease_algo
-                                :immunosuppressant_drug
-                                :immunosuppressant_drug_algo]
-                  "2020-04-06" [ ;; :id
-                                :algo_version :form_version :date
-                                :duration :postal_code :orientation
-                                :age_range :imc :feeding_day :breathlessness
-                                :temperature_cat :fever_algo
-                                :tiredness :tiredness_details :cough
-                                :agueusia_anosmia :sore_throat_aches
-                                :diarrhea :diabetes :cancer
-                                :breathing_disease :kidney_disease
-                                :liver_disease :pregnant
-                                :heart_disease :heart_disease_algo
-                                :immunosuppressant_disease
-                                :immunosuppressant_disease_algo
-                                :immunosuppressant_drug
-                                :immunosuppressant_drug_algo]
-                  [])]
-    (if-not (#{"2020-04-06" "2020-04-17"} version)
-      (println "Unknown version" version)
-      (sc/spit-csv
-       (str version "-example.csv")
-       (sc/vectorize
-        {:header header}
-        (filter #(= version (:algo_version %))
-                (gen/sample (s/gen
-                             (condp = version
-                               "2020-04-17"
-                               ::response-2020-04-17
-                               "2020-04-06"
-                               ::response-2020-04-06)) 20)))))))

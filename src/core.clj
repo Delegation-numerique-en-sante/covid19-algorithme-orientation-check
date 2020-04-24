@@ -8,41 +8,61 @@
             [java-time :as t])
   (:gen-class))
 
-(def today (t/local-date))
-
-(def output-schema-filename
-  (str today "-covid19-schema-errors.txt"))
-
-(def output-algo-filename
-  (str today "-covid19-algo-errors.csv"))
-
+(def output-schema-filename "schema-errors.txt")
+(def output-algo-filename "algo-errors.csv")
 (def errors (atom nil))
 
-(def fn-versions
-  {"2020-04-06" {:result-fn     #'algo/result-2020-04-06
-                 :preprocess-fn #'algo/preprocess-2020-04-06}
-   "2020-04-17" {:result-fn     #'algo/result-2020-04-17
-                 :preprocess-fn #'algo/preprocess-2020-04-17}})
+(def orientation-fns
+  {"2020-04-06" #'algo/orientation-2020-04-06
+   "2020-04-17" #'algo/orientation-2020-04-17})
 
-;; Convert a json line into a csv line
-(defn check-algo [{:keys [date orientation
-                          algo_version line
-                          duration imc]
-                   :as   data}]
-  ;; Check if the orientation message is valid
-  (if-let [{:keys [preprocess-fn result-fn]}
-           (get fn-versions algo_version)]
-    (try ;; First preprocess input values
-      (let [computed-values      (merge data (preprocess-fn data))
-            computed-orientation (result-fn computed-values)]
-        ;; Then check csv orientation vs valid orientation
+(defn valid-factors? [data0 data1]
+  (let [keys [:fever_algo
+              :heart_disease_algo
+              :immunosuppressant_disease_algo
+              :immunosuppressant_drug_algo]]
+    (= (select-keys data0 keys)
+       (select-keys data1 keys))))
+
+(defn check-algo [{:keys [date orientation algo_version line] :as data}]
+  (if-let [orientation-fn (get orientation-fns algo_version)]
+    (try
+      (let [normal-data0         (algo/normalize-data data)
+            normal-data1         (algo/compute-factors normal-data0)
+            computed-orientation (orientation-fn normal-data1)]
+        ;; Check csv orientation vs valid orientation:
+        (when-not (valid-factors? normal-data0 normal-data1)
+          (swap! errors conj
+                 (str (s/join "," [line date "incorrect *_algo or factors values"])
+                      "\n")))
+        ;; Check csv orientation vs valid orientation:
         (when-not (= orientation computed-orientation)
           (swap! errors conj
-                 (str (s/join "," [line date orientation
-                                   computed-orientation]) "\n"))))
+                 (str (s/join "," [line date
+                                   (str orientation " should be "
+                                        computed-orientation)])
+                      "\n"))))
       (catch Exception _
         (println
          (format "Line %s: cannot apply algo %s\n" line algo_version))))
+    (println
+     (format "Line %s: algo_version %s unknown\n" line algo_version))))
+
+;; Fix data and possibly orientation message using the algorithm
+(defn fix-algo [{:keys [algo_version line] :as data} orientation?]
+  (if-let [orientation-fn (get orientation-fns algo_version)]
+    (try (let [normal-data0         (algo/normalize-data data)
+               normal-data1         (algo/compute-factors normal-data0)
+               computed-orientation (orientation-fn normal-data1)]
+           (if orientation?
+             ;; Fix data and orientation
+             (dissoc (merge normal-data1 {:orientation computed-orientation})
+                     :line)
+             ;; Otherwise only return correct data
+             (dissoc normal-data1 :line)))
+         (catch Exception e
+           (println
+            (format "Line %s: cannot apply algo %s because %s\n" line algo_version e))))
     (println
      (format "Line %s: algo_version %s unknown\n" line algo_version))))
 
@@ -60,27 +80,72 @@
     :cast-fns {:imc      #(edn/read-string %)
                :duration #(edn/read-string %)})))
 
+(def csv-header [:algo_version :form_version :date ;; :id
+                 :duration :postal_code :orientation
+                 :age_range :imc :feeding_day :breathlessness
+                 :temperature_cat :fever_algo
+                 :tiredness :tiredness_details :cough
+                 :agueusia_anosmia :sore_throat_aches
+                 :diarrhea :diabetes :cancer
+                 :breathing_disease :kidney_disease
+                 :liver_disease :pregnant
+                 :heart_disease :heart_disease_algo
+                 :immunosuppressant_disease
+                 :immunosuppressant_disease_algo
+                 :immunosuppressant_drug
+                 :immunosuppressant_drug_algo])
+
+(defn generate-csv-examples [& [number valid?]]
+  (let [fix-algo-fn (if valid? #(fix-algo % true) identity)]
+    (sc/spit-csv
+     "2020-04-17-example.csv"
+     (sc/vectorize
+      {:header csv-header}
+      (map fix-algo-fn
+           (specs/generate-samples
+            "2020-04-17" (or number 10)))))))
+
+(defn check [{:keys [fun ok-msg err-msg contents input output]}]
+  (doseq [data input] (fun data))
+  (if (empty? @errors)
+    (println ok-msg)
+    (do (spit output contents)
+        (doseq [err (reverse @errors)]
+          (spit output-schema-filename err :append true))
+        (println err-msg output))))
+
+(defn fix [{:keys [prefix csv-file data orientation?]}]
+  (sc/spit-csv
+   (str prefix csv-file)
+   (sc/vectorize
+    {:header csv-header}
+    (map #(fix-algo % orientation?) data))))
+
 (defn -main [opt & [input-csv-file]]
   (reset! errors nil)
   (condp = opt
     "make-schema" (schema/generate)
-    "make-csv"    (specs/generate-csv-examples)
+    "make-csv"    (generate-csv-examples 100 true)
     "check-schema"
-    (let [input-data (csv-to-data input-csv-file)]
-      (doseq [data input-data] (check-schema data))
-      (if (empty? @errors)
-        (println "Success! This csv schema is valid.")
-        (do (doseq [err (reverse @errors)]
-              (spit output-schema-filename "")
-              (spit output-schema-filename err :append true))
-            (println "!!! Errors stored in" output-schema-filename))))
+    (check {:fun      check-schema
+            :ok-msg   "Success! This csv schema is valid."
+            :err-msg  "!!! Errors stored in"
+            :contents ""
+            :input    (csv-to-data input-csv-file)
+            :output   output-schema-filename})
     "check-algo"
-    (let [input-data (csv-to-data input-csv-file)]
-      (doseq [data input-data] (check-algo data))
-      (if (empty? @errors)
-        (println "Success! All entries have a correct orientation value.")
-        (do (spit output-algo-filename
-                  "line,date,tested-orientation,valid-orientation\n")
-            (doseq [err (reverse @errors)]
-              (spit output-algo-filename err :append true))
-            (println "!!! Errors stored in" output-algo-filename))))))
+    (check {:fun      check-algo
+            :ok-msg   "Success! All entries have a correct orientation value."
+            :err-msg  "!!! Errors stored in"
+            :contents "line,date,error\n"
+            :input    (csv-to-data input-csv-file)
+            :output   output-algo-filename})
+    "fix-data"
+    (fix {:prefix   "fixed-data-"
+          :csv-file input-csv-file
+          :data     (csv-to-data input-csv-file)})
+    "fix-algo"
+    (fix {:prefix       "fixed-algo-"
+          :csv-file     input-csv-file
+          :data         (csv-to-data input-csv-file)
+          :orientation? true})))
