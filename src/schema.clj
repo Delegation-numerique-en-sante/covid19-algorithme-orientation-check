@@ -58,11 +58,12 @@
      :example     "orientation_SAMU"
      :type        "string"
      :constraints {:enum     ["orientation_SAMU"
-                              "orientation_domicile_surveillance_1"
                               "orientation_consultation_surveillance_1"
                               "orientation_consultation_surveillance_2"
                               "orientation_consultation_surveillance_3"
                               "orientation_consultation_surveillance_4"
+                              "orientation_domicile_surveillance_1"
+                              "orientation_moins_de_15_ans"
                               "orientation_surveillance"]
                    :required true}}
 
