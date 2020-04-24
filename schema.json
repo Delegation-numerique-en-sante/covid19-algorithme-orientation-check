@@ -1,6 +1,6 @@
 {
   "description" : "Spécification des données issues des questionnaires d'orientation Covid-19",
-  "homepage" : "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-schema",
+  "homepage" : "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check",
   "updated" : "2020-04-19",
   "fields" : [ {
     "name" : "algo_version",
@@ -258,7 +258,7 @@
   "title" : "Spécification des données issues des questionnaires d'orientation Covid-19",
   "author" : "Délégation numérique en santé - ministère des Solidarités et de la Santé",
   "contributor" : "Direction interministérielle du numérique",
-  "example" : "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-schema/blob/master/exemple.csv",
+  "example" : "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/blob/master/2020-04-17-example.csv",
   "version" : "2020-04-17",
   "contact" : "mobilisation-covid@sante.gouv.fr"
 }
