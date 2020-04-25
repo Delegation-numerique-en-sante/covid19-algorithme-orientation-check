@@ -6,6 +6,8 @@
 
 ;; (s/def ::id uuid?)
 
+(def depts (into #{} (map #(subs % 0 2) const/postal-codes)))
+
 (s/def ::algo_version
   (s/with-gen
     (s/and string? #(re-matches #"^\d{4}-\d{2}-\d{2}$" %))
@@ -15,8 +17,12 @@
 
 (s/def ::postal_code
   (s/with-gen
-    (s/and string? #(re-matches #"^$|^\d{1}.{4}$" %))
-    #(s/gen const/postal-codes)))
+    (s/and string? (s/or :full const/postal-codes
+                         :dept depts
+                         :null #{""}))
+    #(s/gen (s/or :full const/postal-codes
+                  :dept depts
+                  :null #{""}))))
 
 (s/def ::age_range
   #{"inf_15" "from_15_to_49" "from_50_to_69" "sup_70"})

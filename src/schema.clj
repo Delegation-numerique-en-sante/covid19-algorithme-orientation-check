@@ -50,7 +50,7 @@
      :description "Le code postal du lieu de résidence actuel"
      :example     "75019"
      :type        "string"
-     :constraints {:pattern  "^\\d.{4}$"
+     :constraints {:pattern  "^\\d.{4}|\\d.{1}$"
                    :required false}}
 
     {:name        "orientation"

@@ -14,7 +14,11 @@
         v))))
 
 (defn normalize-data [data]
-  (into {} (for [[k v] data] [k (normalize v)])))
+  (into {} (for [[k v] data]
+             ;; Don't normalize postal codes as "69" should not be
+             ;; converted into a number
+             [k (if-not (= k :postal_code) (normalize v)
+                        v)])))
 
 (defn compute-factors [{:keys [imc age_range
                                tiredness tiredness_details
