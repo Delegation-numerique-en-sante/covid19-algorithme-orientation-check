@@ -4,8 +4,7 @@
             [algo :as algo]
             [specs :as specs]
             [schema :as schema]
-            [clojure.edn :as edn]
-            [java-time :as t])
+            [clojure.edn :as edn])
   (:gen-class))
 
 (def output-schema-filename "schema-errors.txt")
@@ -44,9 +43,9 @@
                       "\n"))))
       (catch Exception _
         (println
-         (format "Line %s: cannot apply algo %s\n" line algo_version))))
+         (format "Line %s: cannot apply algo %s" line algo_version))))
     (println
-     (format "Line %s: algo_version %s unknown\n" line algo_version))))
+     (format "Line %s: algo_version %s unknown" line algo_version))))
 
 ;; Fix data and possibly orientation message using the algorithm
 (defn fix-algo [{:keys [algo_version line] :as data} orientation?]
@@ -62,9 +61,9 @@
              (dissoc normal-data1 :line)))
          (catch Exception e
            (println
-            (format "Line %s: cannot apply algo %s because %s\n" line algo_version e))))
+            (format "Line %s: cannot apply algo %s because %s" line algo_version e))))
     (println
-     (format "Line %s: algo_version %s unknown\n" line algo_version))))
+     (format "Line %s: algo_version %s unknown" line algo_version))))
 
 (defn check-schema [{:keys [algo_version line] :as data}]
   ;; Validate data against the schema

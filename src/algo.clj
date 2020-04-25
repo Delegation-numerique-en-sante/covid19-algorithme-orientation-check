@@ -1,9 +1,11 @@
 (ns algo
-  (:require [clojure.edn :as edn]))
+  (:require [clojure.edn :as edn]
+            [java-time :as t]))
 
 (defn normalize [v]
   (cond
     (or (nat-int? v) (float? v))                           v
+    (try (t/instant v) (catch Exception _ nil))            v
     (re-matches #"^\d{4}-\d{2}-\d{2}|\d....|\d{2}\..*$" v) v
     :else
     (let [val-s (edn/read-string v)]

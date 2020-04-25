@@ -19,6 +19,7 @@
   (s/with-gen
     (s/and string? (s/or :full const/postal-codes
                          :dept depts
+                         :obsc #(re-matches #"^\d.{4}$" %)
                          :null #{""}))
     #(s/gen (s/or :full const/postal-codes
                   :dept depts
@@ -29,10 +30,13 @@
 
 (s/def ::date
   (s/with-gen
-    (s/and string? #(t/local-date %))
+    (s/and string? #(t/instant %))
     #(s/gen
       (into
-       #{} (map (fn [n] (str (t/plus (t/local-date) (t/days n))))
+       #{} (map (fn [n]
+                  (str (t/truncate-to
+                        (t/plus (t/instant (t/zoned-date-time)) (t/days n))
+                        :seconds)))
                 (range 50))))))
 
 (def duration-min 30)
