@@ -4,8 +4,6 @@
             [const :as const]
             [java-time :as t]))
 
-;; (s/def ::id uuid?)
-
 (def depts (into #{} (map #(subs % 0 2) const/postal-codes)))
 
 (s/def ::algo_version
@@ -53,14 +51,31 @@
           ::float (s/and float? #(> % imc-min) #(< % imc-max)))
     #(s/gen #{30 28.7 29.2 31.9 34.2 26})))
 
-(s/def ::orientation #{"orientation_moins_de_15_ans"
-                       "orientation_SAMU"
-                       "orientation_domicile_surveillance_1"
-                       "orientation_surveillance"
-                       "orientation_consultation_surveillance_1"
-                       "orientation_consultation_surveillance_2"
-                       "orientation_consultation_surveillance_3"
-                       "orientation_consultation_surveillance_4"})
+(s/def ::id
+  (s/with-gen
+    (s/and string? #(re-matches #"^[a-z0-9]{8}-([a-z0-9]{4}-){3}[a-z0-9]{12}$" %))
+    #(s/gen (into #{} (for [_ (range 100)]
+                        (str (java.util.UUID/randomUUID)))))))
+
+(s/def ::orientation
+  #{"orientation_moins_de_15_ans"
+    "orientation_SAMU"
+    "orientation_domicile_surveillance_1"
+    "orientation_surveillance"
+    "orientation_consultation_surveillance_1"
+    "orientation_consultation_surveillance_2"
+    "orientation_consultation_surveillance_3"
+    "orientation_consultation_surveillance_4"})
+
+(s/def ::orientation-2020-04-29
+  #{"less_15"
+    "SAMU"
+    "domicile_surveillance_1"
+    "surveillance"
+    "consultation_surveillance_1"
+    "consultation_surveillance_2"
+    "consultation_surveillance_3"
+    "consultation_surveillance_4"})
 
 (s/def ::myboolean-nsp
   (s/with-gen
@@ -163,7 +178,6 @@
                    ::form_version
                    ::heart_disease
                    ::heart_disease_algo
-                   ;; ::id
                    ::imc
                    ::immunosuppressant_disease
                    ::immunosuppressant_disease_algo
@@ -178,11 +192,46 @@
                    ::tiredness
                    ::tiredness_details
                    ]
-          :opt-un [::postal_code]))
+          :opt-un [::postal_code ::id]))
+
+(s/def ::response-2020-04-29
+  (s/keys :req-un [
+                   ::age_range
+                   ::agueusia_anosmia
+                   ::algo_version
+                   ::breathing_disease
+                   ::breathlessness
+                   ::cancer
+                   ::cough
+                   ::date
+                   ::duration
+                   ::diabetes
+                   ::diarrhea
+                   ::feeding_day
+                   ::fever_algo
+                   ::form_version
+                   ::heart_disease
+                   ::heart_disease_algo
+                   ::imc
+                   ::immunosuppressant_disease
+                   ::immunosuppressant_disease_algo
+                   ::immunosuppressant_drug
+                   ::immunosuppressant_drug_algo
+                   ::kidney_disease
+                   ::liver_disease
+                   ::orientation-2020-04-29
+                   ::pregnant
+                   ::sore_throat_aches
+                   ::temperature_cat
+                   ::tiredness
+                   ::tiredness_details
+                   ]
+          :opt-un [::postal_code ::id]))
 
 (defn generate-response [version]
   (s/gen
    (condp = version
+     "2020-04-29" ::response-2020-04-29
      "2020-04-17" ::response-2020-04-17
      "2020-04-06" ::response-2020-04-06
      nil?)))
@@ -197,4 +246,5 @@
   (condp = version
     "2020-04-06" (s/valid? ::response-2020-04-06 r)
     "2020-04-17" (s/valid? ::response-2020-04-17 r)
+    "2020-04-29" (s/valid? ::response-2020-04-29 r)
     false))
