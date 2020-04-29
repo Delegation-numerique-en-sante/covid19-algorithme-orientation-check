@@ -3,27 +3,38 @@
 
 (def latest-schema-version "2020-04-29")
 
-(def schema-2020-04-06
+(defn orientation [version]
+  (condp = version
+    "2020-04-29" ["SAMU"
+                  "consultation_surveillance_1"
+                  "consultation_surveillance_2"
+                  "consultation_surveillance_3"
+                  "consultation_surveillance_4"
+                  "home_surveillance"
+                  "less_15"
+                  "surveillance"]
+    ["orientation_SAMU"
+     "orientation_consultation_surveillance_1"
+     "orientation_consultation_surveillance_2"
+     "orientation_consultation_surveillance_3"
+     "orientation_consultation_surveillance_4"
+     "orientation_domicile_surveillance_1"
+     "orientation_moins_de_15_ans"
+     "orientation_surveillance"]))
+
+(defn schema [version]
   {:title       "Spécification des données issues des questionnaires d'orientation Covid-19"
    :description "Spécification des données issues des questionnaires d'orientation Covid-19"
    :author      "Délégation numérique en santé - ministère des Solidarités et de la Santé"
    :contact     "mobilisation-covid@sante.gouv.fr"
    :contributor "Direction interministérielle du numérique"
-   :version     "2020-04-29"
+   :version     version
    :created     "2020-04-19"
-   :updated     "2020-04-29"
+   :updated     version
    :homepage    "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check"
    :example     "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/blob/master/example.csv"
    :fields
-   [;; {:name        "id"
-    ;;  :description "Un identifiant unique pour la réponse"
-    ;;  :example     "1e0dfed7-503a-4f21-8517-f0d0081495ce"
-    ;;  :type        "string"
-    ;;  :format      "uuid"
-    ;;  :constraints {:required true
-    ;;                :unique   true}}
-
-    {:name        "algo_version"
+   [{:name        "algo_version"
      :description "Le numéro de version de l'algorithme d'orientation Covid-19"
      :example     "2020-04-17"
      :type        "date"
@@ -59,14 +70,7 @@
      :description "L'identifiant du message d'orientation envoyé au répondant"
      :example     "orientation_SAMU"
      :type        "string"
-     :constraints {:enum     ["orientation_SAMU"
-                              "orientation_consultation_surveillance_1"
-                              "orientation_consultation_surveillance_2"
-                              "orientation_consultation_surveillance_3"
-                              "orientation_consultation_surveillance_4"
-                              "orientation_domicile_surveillance_1"
-                              "orientation_moins_de_15_ans"
-                              "orientation_surveillance"]
+     :constraints {:enum     (orientation version)
                    :required true}}
 
     {:name        "age_range"
@@ -97,13 +101,14 @@
      :type        "boolean"
      :constraints {:required true}}
 
-    {:name        "fever"
-     :description "Réponse à la question posée sur la fièvre"
-     :example     999
-     :type        "number"
-     ;; 999 correspond à "Je ne sais pas"
-     :constraints {:enum     [0 1 999]
-                   :required true}}
+    (when (= version "2020-04-06")
+      {:name        "fever"
+       :description "Réponse à la question posée sur la fièvre"
+       :example     999
+       :type        "number"
+       ;; 999 correspond à "Je ne sais pas"
+       :constraints {:enum     [0 1 999]
+                     :required true}})
 
     {:name        "temperature_cat"
      :description "Température la plus élevée ces dernières 48 heures"
@@ -235,26 +240,19 @@
      :type        "boolean"
      :constraints {:required true}}
 
+    (when (= version "2020-04-29")
+      {:name        "id"
+       :description "Traitement immunodépresseur"
+       :example     "7b3215d8-ef17-4bd8-b441-c74a36dfcd67"
+       :type        "string"
+       :format      "uuid"
+       :constraints {:required false
+                     :unique   true}})
     ]})
 
-(def schema-2020-04-17
-  (-> schema-2020-04-06
-      (update :fields #(remove (fn [f] (= (:name f) "fever")) %))))
-
-(def schema-2020-04-29
-  (-> schema-2020-04-17
-      (update :fields concat
-              '({:name        "id"
-                 :description "Traitement immunodépresseur"
-                 :example     "7b3215d8-ef17-4bd8-b441-c74a36dfcd67"
-                 :type        "string"
-                 :format      "uuid"
-                 :constraints {:required false
-                               :unique   true}}))))
-
-(def schemas {"2020-04-06" schema-2020-04-06
-              "2020-04-17" schema-2020-04-17
-              "2020-04-29" schema-2020-04-29})
+(def schemas {"2020-04-06" (schema "2020-04-06")
+              "2020-04-17" (schema "2020-04-17")
+              "2020-04-29" (schema "2020-04-29")})
 
 (defn generate [& [version]]
   (spit "schema.json"
