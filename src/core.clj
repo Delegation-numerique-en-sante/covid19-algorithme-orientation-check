@@ -7,13 +7,16 @@
             [clojure.edn :as edn])
   (:gen-class))
 
+(def latest-algo-version "2020-04-29")
+
 (def output-schema-filename "schema-errors.txt")
 (def output-algo-filename "algo-errors.csv")
 (def errors (atom nil))
 
 (def orientation-fns
   {"2020-04-06" #'algo/orientation-2020-04-06
-   "2020-04-17" #'algo/orientation-2020-04-17})
+   "2020-04-17" #'algo/orientation-2020-04-17
+   "2020-04-29" #'algo/orientation-2020-04-29})
 
 (defn valid-factors? [data0 data1]
   (let [keys [:fever_algo
@@ -53,12 +56,13 @@
     (try (let [normal-data0         (algo/normalize-data data)
                normal-data1         (algo/compute-factors normal-data0)
                computed-orientation (orientation-fn normal-data1)]
-           (if orientation?
-             ;; Fix data and orientation
-             (dissoc (merge normal-data1 {:orientation computed-orientation})
-                     :line)
-             ;; Otherwise only return correct data
-             (dissoc normal-data1 :line)))
+           (assoc
+            (if orientation?
+              ;; Fix data and orientation
+              (dissoc (merge normal-data1 {:orientation computed-orientation}) :line)
+              ;; Otherwise only return correct data
+              (dissoc normal-data1 :line))
+            :form_version algo_version))
          (catch Exception e
            (println
             (format "Line %s: cannot apply algo %s because %s" line algo_version e))))
@@ -79,7 +83,7 @@
     :cast-fns {:imc      #(edn/read-string %)
                :duration #(edn/read-string %)})))
 
-(def csv-header [:algo_version :form_version :date ;; :id
+(def csv-header [:algo_version :form_version :date
                  :duration :postal_code :orientation
                  :age_range :imc :feeding_day :breathlessness
                  :temperature_cat :fever_algo
@@ -92,17 +96,18 @@
                  :immunosuppressant_disease
                  :immunosuppressant_disease_algo
                  :immunosuppressant_drug
-                 :immunosuppressant_drug_algo])
+                 :immunosuppressant_drug_algo
+                 :id])
 
 (defn generate-csv-examples [& [number valid?]]
   (let [fix-algo-fn (if valid? #(fix-algo % true) identity)]
     (sc/spit-csv
-     "2020-04-17-example.csv"
+     "example.csv"
      (sc/vectorize
       {:header csv-header}
       (map fix-algo-fn
            (specs/generate-samples
-            "2020-04-17" (or number 10)))))))
+            latest-algo-version (or number 10)))))))
 
 (defn check [{:keys [fun ok-msg err-msg contents input output]}]
   (doseq [data input] (fun data))
@@ -113,9 +118,9 @@
           (spit output-schema-filename err :append true))
         (println err-msg output))))
 
-(defn fix [{:keys [prefix csv-file data orientation?]}]
+(defn fix [{:keys [suffix csv-file data orientation?]}]
   (sc/spit-csv
-   (str prefix csv-file)
+   (str csv-file suffix)
    (sc/vectorize
     {:header csv-header}
     (map #(fix-algo % orientation?) data))))
@@ -140,11 +145,11 @@
             :input    (csv-to-data input-csv-file)
             :output   output-algo-filename})
     "fix-data"
-    (fix {:prefix   "fixed-data-"
+    (fix {:suffix   "-fixed-data.csv"
           :csv-file input-csv-file
           :data     (csv-to-data input-csv-file)})
     "fix-algo"
-    (fix {:prefix       "fixed-algo-"
+    (fix {:suffix       "-fixed.csv"
           :csv-file     input-csv-file
           :data         (csv-to-data input-csv-file)
           :orientation? true})))
