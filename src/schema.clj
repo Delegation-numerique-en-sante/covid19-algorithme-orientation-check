@@ -1,15 +1,17 @@
 (ns schema
   (:require [cheshire.core :as json]))
 
+(def latest-schema-version "2020-04-29")
+
 (def schema-2020-04-06
   {:title       "Spécification des données issues des questionnaires d'orientation Covid-19"
    :description "Spécification des données issues des questionnaires d'orientation Covid-19"
    :author      "Délégation numérique en santé - ministère des Solidarités et de la Santé"
    :contact     "mobilisation-covid@sante.gouv.fr"
    :contributor "Direction interministérielle du numérique"
-   :version     "2020-04-17"
+   :version     "2020-04-29"
    :created     "2020-04-19"
-   :updated     "2020-04-19"
+   :updated     "2020-04-29"
    :homepage    "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check"
    :example     "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/blob/master/2020-04-17-example.csv"
    :fields
@@ -231,17 +233,31 @@
      :description "Traitement immunodépresseur"
      :example     false
      :type        "boolean"
-     :constraints {:required true}}]})
+     :constraints {:required true}}
+
+    ]})
 
 (def schema-2020-04-17
-  (update schema-2020-04-06
-          :fields #(remove (fn [f] (= (:name f) "fever")) %)))
+  (-> schema-2020-04-06
+      (update :fields #(remove (fn [f] (= (:name f) "fever")) %))))
+
+(def schema-2020-04-29
+  (-> schema-2020-04-17
+      (update :fields concat
+              '({:name        "id"
+                 :description "Traitement immunodépresseur"
+                 :example     "7b3215d8-ef17-4bd8-b441-c74a36dfcd67"
+                 :type        "string"
+                 :format      "uuid"
+                 :constraints {:required false
+                               :unique   true}}))))
 
 (def schemas {"2020-04-06" schema-2020-04-06
-              "2020-04-17" schema-2020-04-17})
+              "2020-04-17" schema-2020-04-17
+              "2020-04-29" schema-2020-04-29})
 
 (defn generate [& [version]]
   (spit "schema.json"
         (json/generate-string
-         (get schemas (or version "2020-04-17"))
+         (get schemas (or version latest-schema-version))
          {:pretty true})))
