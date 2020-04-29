@@ -4,9 +4,7 @@
 
 (defn normalize [v]
   (cond
-    (or (nat-int? v) (float? v))                           v
-    (try (t/instant v) (catch Exception _ nil))            v
-    (re-matches #"^\d{4}-\d{2}-\d{2}|\d....|\d{2}\..*$" v) v
+    (nat-int? v) v
     :else
     (let [val-s (edn/read-string v)]
       (condp #(= %1 (type %2)) val-s
@@ -16,11 +14,15 @@
         v))))
 
 (defn normalize-data [data]
-  (into {} (for [[k v] data]
-             ;; Don't normalize postal codes as "69" should not be
-             ;; converted into a number
-             [k (if-not (= k :postal_code) (normalize v)
-                        v)])))
+  (merge
+   data
+   (into
+    {}
+    (for [[k v] (dissoc data
+                        :postal_code :id :temperature_cat
+                        :form_version :algo_version
+                        :date :duration :imc)]
+      [k (normalize v)]))))
 
 (defn compute-factors [{:keys [imc age_range
                                tiredness tiredness_details
@@ -182,3 +184,54 @@
          (not sore_throat_aches)
          (not agueusia_anosmia))
     "orientation_surveillance"))
+
+(defn orientation-2020-04-29
+  [{:keys [age_range
+           fever_algo diarrhea cough
+           sore_throat_aches agueusia_anosmia
+           pronostic-factors
+           major-severity-factors
+           minor-severity-factors]}]
+  (cond
+    ;; Branche 1
+    (= age_range "inf_15")
+    "less_15"
+    ;; Branche 2
+    (>= major-severity-factors 1)
+    "SAMU"
+    ;; Branche 3
+    (and fever_algo cough)
+    (cond (= pronostic-factors 0)
+          "consultation_surveillance_3"
+          (>= pronostic-factors 1)
+          (if (< minor-severity-factors 2)
+            "consultation_surveillance_3"
+            "consultation_surveillance_2"))
+    ;; Branche 4
+    (or fever_algo
+        diarrhea
+        (and cough sore_throat_aches)
+        (and cough agueusia_anosmia)
+        (and sore_throat_aches agueusia_anosmia))
+    (cond (= pronostic-factors 0)
+          (if (= minor-severity-factors 0)
+            (if (= age_range "from_15_to_49")
+              "domicile_surveillance_1"
+              "consultation_surveillance_1")
+            "consultation_surveillance_1")
+          (>= pronostic-factors 1)
+          (if (< minor-severity-factors 2)
+            "consultation_surveillance_1"
+            "consultation_surveillance_2"))
+    ;; Branche 5
+    (or (and cough (not sore_throat_aches) (not agueusia_anosmia))
+        (and (not cough) sore_throat_aches (not agueusia_anosmia))
+        (and (not cough) (not sore_throat_aches) agueusia_anosmia))
+    (if (= pronostic-factors 0)
+      "domicile_surveillance_1"
+      "consultation_surveillance_4")
+    ;; Branche 6
+    (and (not cough)
+         (not sore_throat_aches)
+         (not agueusia_anosmia))
+    "surveillance"))
