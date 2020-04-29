@@ -1,7 +1,7 @@
 {
   "description" : "Spécification des données issues des questionnaires d'orientation Covid-19",
   "homepage" : "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check",
-  "updated" : "2020-04-19",
+  "updated" : "2020-04-29",
   "fields" : [ {
     "name" : "algo_version",
     "description" : "Le numéro de version de l'algorithme d'orientation Covid-19",
@@ -41,7 +41,7 @@
     "example" : "75019",
     "type" : "string",
     "constraints" : {
-      "pattern" : "^\\d.{4}$",
+      "pattern" : "^\\d.{4}|\\d.{1}$",
       "required" : false
     }
   }, {
@@ -253,12 +253,22 @@
     "constraints" : {
       "required" : true
     }
+  }, {
+    "name" : "id",
+    "description" : "Traitement immunodépresseur",
+    "example" : "7b3215d8-ef17-4bd8-b441-c74a36dfcd67",
+    "type" : "string",
+    "format" : "uuid",
+    "constraints" : {
+      "required" : false,
+      "unique" : true
+    }
   } ],
   "created" : "2020-04-19",
   "title" : "Spécification des données issues des questionnaires d'orientation Covid-19",
   "author" : "Délégation numérique en santé - ministère des Solidarités et de la Santé",
   "contributor" : "Direction interministérielle du numérique",
-  "example" : "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/blob/master/2020-04-17-example.csv",
-  "version" : "2020-04-17",
+  "example" : "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/blob/master/example.csv",
+  "version" : "2020-04-29",
   "contact" : "mobilisation-covid@sante.gouv.fr"
 }

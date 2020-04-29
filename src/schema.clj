@@ -13,7 +13,7 @@
    :created     "2020-04-19"
    :updated     "2020-04-29"
    :homepage    "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check"
-   :example     "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/blob/master/2020-04-17-example.csv"
+   :example     "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/blob/master/example.csv"
    :fields
    [;; {:name        "id"
     ;;  :description "Un identifiant unique pour la réponse"
