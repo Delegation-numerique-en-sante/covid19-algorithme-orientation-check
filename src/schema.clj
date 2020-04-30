@@ -95,12 +95,16 @@
       :description "Difficulté à boire ou se nourrir dans les dernières 24 heures"
       :example     true
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "breathlessness"
       :description "Apparition d'un manque de souffle inhabituel"
       :example     true
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      (when (= version "2020-04-06")
@@ -124,122 +128,152 @@
       :description "Calcul du facteur fièvre"
       :example     false
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "tiredness"
       :description "Fatigue"
       :example     true
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "tiredness_details"
       :description "Fatigue obligeant à rester alité plus de la moitié de la journée"
       :example     true
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required false}}
 
      {:name        "cough"
       :description "Toux"
       :example     true
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "agueusia_anosmia"
       :description "Perte de goût ou d'odorat"
       :example     true
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "sore_throat_aches"
       :description "Apparition de maux de gorge, douleurs musculaires ou courbatures inhabituelles"
       :example     true
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "diarrhea"
       :description "Diarrhée"
       :example     true
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "diabetes"
       :description "Diabète"
       :example     true
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "cancer"
       :description "Cancer en cours ou il y a moins de trois ans"
       :example     true
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "breathing_disease"
       :description "Maladie respiratoire ou suivi pneumologique"
       :example     true
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "kidney_disease"
       :description "Insuffisance rénale chronique dialysée"
       :example     true
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "liver_disease"
       :description "Maladie chronique du foie"
       :example     true
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "pregnant"
       :description "La personne est-elle enceinte"
-      :example     888
-      :type        "number"
+      :example     "888"
+      :type        "string"
       ;; 888 correspond à "Je ne sais pas"
-      :constraints {:enum     [0 1 888]
+      :constraints {:enum     ["0" "false" "1" "true" "888"]
                     :required true}}
 
      {:name        "heart_disease"
       :description "Maladie cardiaque"
-      :example     999
-      :type        "number"
+      :example     "999"
+      :type        "string"
       ;; 999 correspond à "Je ne sais pas"
-      :constraints {:enum     [0 1 999]
+      :constraints {:enum     ["0" "false" "1" "true" "999"]
                     :required true}}
 
      {:name        "heart_disease_algo"
       :description "Maladie cardiaque"
       :example     false
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "immunosuppressant_disease"
       :description "Maladie défenses immunitaires"
-      :example     999
-      :type        "number"
+      :example     "999"
+      :type        "string"
       ;; 999 correspond à "Je ne sais pas"
-      :constraints {:enum     [0 1 999]
+      :constraints {:enum     ["0" "false" "1" "true" "999"]
                     :required true}}
 
      {:name        "immunosuppressant_disease_algo"
       :description "Maladie défenses immunitaires"
       :example     false
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      {:name        "immunosuppressant_drug"
       :description "Traitement immunodépresseur"
-      :example     999
+      :example     "999"
       :type        "number"
       ;; 999 correspond à "Je ne sais pas"
-      :constraints {:enum     [0 1 999]
+      :constraints {:enum     ["0" "false" "1" "true" "999"]
                     :required true}}
 
      {:name        "immunosuppressant_drug_algo"
       :description "Traitement immunodépresseur"
       :example     false
       :type        "boolean"
+      :trueValues  ["1" "true"]
+      :falseValues ["0" "false"]
       :constraints {:required true}}
 
      (when (= version "2020-04-29")

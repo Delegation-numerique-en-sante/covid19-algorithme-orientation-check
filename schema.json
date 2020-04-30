@@ -77,6 +77,8 @@
     "description" : "Difficulté à boire ou se nourrir dans les dernières 24 heures",
     "example" : true,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
@@ -85,6 +87,8 @@
     "description" : "Apparition d'un manque de souffle inhabituel",
     "example" : true,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
@@ -102,6 +106,8 @@
     "description" : "Calcul du facteur fièvre",
     "example" : false,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
@@ -110,6 +116,8 @@
     "description" : "Fatigue",
     "example" : true,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
@@ -118,6 +126,8 @@
     "description" : "Fatigue obligeant à rester alité plus de la moitié de la journée",
     "example" : true,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : false
     }
@@ -126,6 +136,8 @@
     "description" : "Toux",
     "example" : true,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
@@ -134,6 +146,8 @@
     "description" : "Perte de goût ou d'odorat",
     "example" : true,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
@@ -142,6 +156,8 @@
     "description" : "Apparition de maux de gorge, douleurs musculaires ou courbatures inhabituelles",
     "example" : true,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
@@ -150,6 +166,8 @@
     "description" : "Diarrhée",
     "example" : true,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
@@ -158,6 +176,8 @@
     "description" : "Diabète",
     "example" : true,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
@@ -166,6 +186,8 @@
     "description" : "Cancer en cours ou il y a moins de trois ans",
     "example" : true,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
@@ -174,6 +196,8 @@
     "description" : "Maladie respiratoire ou suivi pneumologique",
     "example" : true,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
@@ -182,6 +206,8 @@
     "description" : "Insuffisance rénale chronique dialysée",
     "example" : true,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
@@ -190,25 +216,27 @@
     "description" : "Maladie chronique du foie",
     "example" : true,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
   }, {
     "name" : "pregnant",
     "description" : "La personne est-elle enceinte",
-    "example" : 888,
-    "type" : "number",
+    "example" : "888",
+    "type" : "string",
     "constraints" : {
-      "enum" : [ 0, 1, 888 ],
+      "enum" : [ "0", "false", "1", "true", "888" ],
       "required" : true
     }
   }, {
     "name" : "heart_disease",
     "description" : "Maladie cardiaque",
-    "example" : 999,
-    "type" : "number",
+    "example" : "999",
+    "type" : "string",
     "constraints" : {
-      "enum" : [ 0, 1, 999 ],
+      "enum" : [ "0", "false", "1", "true", "999" ],
       "required" : true
     }
   }, {
@@ -216,16 +244,18 @@
     "description" : "Maladie cardiaque",
     "example" : false,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
   }, {
     "name" : "immunosuppressant_disease",
     "description" : "Maladie défenses immunitaires",
-    "example" : 999,
-    "type" : "number",
+    "example" : "999",
+    "type" : "string",
     "constraints" : {
-      "enum" : [ 0, 1, 999 ],
+      "enum" : [ "0", "false", "1", "true", "999" ],
       "required" : true
     }
   }, {
@@ -233,16 +263,18 @@
     "description" : "Maladie défenses immunitaires",
     "example" : false,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
   }, {
     "name" : "immunosuppressant_drug",
     "description" : "Traitement immunodépresseur",
-    "example" : 999,
+    "example" : "999",
     "type" : "number",
     "constraints" : {
-      "enum" : [ 0, 1, 999 ],
+      "enum" : [ "0", "false", "1", "true", "999" ],
       "required" : true
     }
   }, {
@@ -250,6 +282,8 @@
     "description" : "Traitement immunodépresseur",
     "example" : false,
     "type" : "boolean",
+    "trueValues" : [ "1", "true" ],
+    "falseValues" : [ "0", "false" ],
     "constraints" : {
       "required" : true
     }
