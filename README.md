@@ -13,10 +13,10 @@ Résumé des commandes:
 	~$ java -cp covid19-check.jar clojure.main -m core make-csv
 
 	# Tester le schéma d'un fichier csv:
-	~$ java -cp covid19-check.jar clojure.main -m core check-schema 2020-04-17-example.csv
+	~$ java -cp covid19-check.jar clojure.main -m core check-schema example.csv
 
 	# Tester la validité des messages d'orientation du fichier csv:
-	~$ java -cp covid19-check.jar clojure.main -m core check-algo 2020-04-17-example.csv
+	~$ java -cp covid19-check.jar clojure.main -m core check-algo example.csv
 
 ## Schéma de données
 
