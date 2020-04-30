@@ -263,7 +263,7 @@
      {:name        "immunosuppressant_drug"
       :description "Traitement immunodépresseur"
       :example     "999"
-      :type        "number"
+      :type        "string"
       ;; 999 correspond à "Je ne sais pas"
       :constraints {:enum     ["0" "false" "1" "true" "999"]
                     :required true}}
