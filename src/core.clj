@@ -4,19 +4,21 @@
             [algo :as algo]
             [specs :as specs]
             [schema :as schema]
-            [clojure.edn :as edn])
+            [clojure.edn :as edn]
+            [java-time :as t])
   (:gen-class))
 
-(def latest-algo-version "2020-04-29")
+(def latest-algo-version "2020-05-09")
 
 (def output-schema-filename "schema-errors.txt")
 (def output-algo-filename "algo-errors.csv")
 (def errors (atom nil))
 
 (def orientation-fns
-  {"2020-04-06" #'algo/orientation-2020-04-06
+  {"2020-05-09" #'algo/orientation-2020-04-29
+   "2020-04-29" #'algo/orientation-2020-04-29
    "2020-04-17" #'algo/orientation-2020-04-17
-   "2020-04-29" #'algo/orientation-2020-04-29})
+   "2020-04-06" #'algo/orientation-2020-04-06})
 
 (defn valid-factors? [data0 data1]
   (let [keys [:fever_algo
@@ -30,7 +32,7 @@
   (if-let [orientation-fn (get orientation-fns algo_version)]
     (try
       (let [normal-data0         (algo/normalize-data data)
-            normal-data1         (algo/compute-factors normal-data0)
+            normal-data1         (algo/compute-factors normal-data0 algo_version)
             computed-orientation (orientation-fn normal-data1)]
         ;; Check csv orientation vs valid orientation:
         (when-not (valid-factors? normal-data0 normal-data1)

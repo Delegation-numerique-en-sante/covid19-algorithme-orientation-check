@@ -36,7 +36,8 @@
                                heart_disease
                                immunosuppressant_drug
                                immunosuppressant_disease]
-                        :as   data}]
+                        :as   data}
+                       algo_version]
   (let [temperature_cat
         ;; Fix temperature_cat wrt fever
         (if (or (false? fever) (= fever 999))
@@ -56,7 +57,9 @@
         minor-severity-factors         (atom 0)
         pronostic-factors              (atom 0)]
     ;; Compute pronostic factors
-    (when (= age_range "sup_70") (swap! pronostic-factors inc))
+    (when (= age_range
+             (if (= algo_version "2020-05-09") "sup_65" "sup_70"))
+      (swap! pronostic-factors inc))
     (when (>= imc 30) (swap! pronostic-factors inc))
     (when heart_disease_algo (swap! pronostic-factors inc))
     (when immunosuppressant_disease_algo (swap! pronostic-factors inc))

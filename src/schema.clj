@@ -1,18 +1,19 @@
 (ns schema
   (:require [cheshire.core :as json]))
 
-(def latest-schema-version "2020-04-29")
+(def latest-schema-version "2020-05-09")
 
 (defn orientation [version]
-  (condp = version
-    "2020-04-29" ["SAMU"
-                  "consultation_surveillance_1"
-                  "consultation_surveillance_2"
-                  "consultation_surveillance_3"
-                  "consultation_surveillance_4"
-                  "home_surveillance"
-                  "less_15"
-                  "surveillance"]
+  (condp contains? version
+    #{"2020-04-29" "2020-05-09"}
+    ["SAMU"
+     "consultation_surveillance_1"
+     "consultation_surveillance_2"
+     "consultation_surveillance_3"
+     "consultation_surveillance_4"
+     "home_surveillance"
+     "less_15"
+     "surveillance"]
     ["orientation_SAMU"
      "orientation_consultation_surveillance_1"
      "orientation_consultation_surveillance_2"
@@ -21,6 +22,11 @@
      "orientation_domicile_surveillance_1"
      "orientation_moins_de_15_ans"
      "orientation_surveillance"]))
+
+(defn age-ranges [version]
+  (condp = version
+    "2020-05-09" ["inf_15" "from_15_to_49" "from_50_to_64" "sup_65"]
+    ["inf_15" "from_15_to_49" "from_50_to_69" "sup_70"]))
 
 (defn schema [version]
   {:title       "Spécification des données issues des questionnaires d'orientation Covid-19"
@@ -79,8 +85,7 @@
       :description "La tranche d'âge dans laquelle se situe le répondant"
       :example     "from_15_to_49"
       :type        "string"
-      :constraints {:enum     ["inf_15" "from_15_to_49"
-                               "from_50_to_69" "sup_70"]
+      :constraints {:enum     (age-ranges version)
                     :required true}}
 
      {:name        "imc"
@@ -288,7 +293,8 @@
 
 (def schemas {"2020-04-06" (schema "2020-04-06")
               "2020-04-17" (schema "2020-04-17")
-              "2020-04-29" (schema "2020-04-29")})
+              "2020-04-29" (schema "2020-04-29")
+              "2020-05-09" (schema "2020-05-09")})
 
 (defn generate [& [version]]
   (spit "schema.json"
