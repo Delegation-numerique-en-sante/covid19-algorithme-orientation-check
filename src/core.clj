@@ -50,19 +50,64 @@
     (println
      (format "Line %s: algo_version %s unknown" line algo_version))))
 
+(defn fix-orientation [orientation]
+  (condp = orientation
+    "orientation_moins_de_15_ans"             "less_15"
+    "orientation_SAMU"                        "SAMU"
+    "orientation_domicile_surveillance_1"     "home_surveillance"
+    "orientation_consultation_surveillance_1" "consultation_surveillance_1"
+    "orientation_consultation_surveillance_2" "consultation_surveillance_2"
+    "orientation_consultation_surveillance_3" "consultation_surveillance_3"
+    "orientation_consultation_surveillance_4" "consultation_surveillance_4"
+    "orientation_surveillance"                "surveillance"
+    orientation))
+
+(defn fix-postal_code [pc]
+  (condp = pc
+    "" ""
+    (str (subs pc 0 2) "XXX")))
+
+(defn fix-date [d]
+  (str (t/truncate-to (t/instant d) :days)))
+
 ;; Fix data and possibly orientation message using the algorithm
 (defn fix-algo [{:keys [algo_version line] :as data} orientation?]
   (if-let [orientation-fn (get orientation-fns algo_version)]
     (try (let [normal-data0         (algo/normalize-data data)
-               normal-data1         (algo/compute-factors normal-data0)
+               normal-data1         (algo/compute-factors normal-data0 algo_version)
                computed-orientation (orientation-fn normal-data1)]
-           (assoc
-            (if orientation?
-              ;; Fix data and orientation
-              (dissoc (merge normal-data1 {:orientation computed-orientation}) :line)
-              ;; Otherwise only return correct data
-              (dissoc normal-data1 :line))
-            :form_version algo_version))
+           (-> (if orientation?
+                 ;; Fix data and orientation
+                 (dissoc (merge normal-data1 {:orientation computed-orientation}) :line)
+                 ;; Otherwise only return correct data
+                 (dissoc normal-data1 :line))
+               (update :orientation fix-orientation)))
+         (catch Exception e
+           (println
+            (format "Line %s: cannot apply algo %s because %s" line algo_version e))))
+    (println
+     (format "Line %s: algo_version %s unknown" line algo_version))))
+
+(defn fix-algo-bug [{:keys [algo_version form_version line
+                            breathlessness feeding_day
+                            orientation]
+                     :as   data}]
+  (if-let [orientation-fn (get orientation-fns algo_version)]
+    (try (let [normal-data0         (algo/normalize-data data)
+               normal-data1         (algo/compute-factors normal-data0 algo_version)
+               computed-orientation (orientation-fn normal-data1)]
+           (-> (if (not (and (= orientation "orientation_SAMU")
+                             (= form_version "2020-04-06")
+                             (= "false" breathlessness)
+                             (= "false" feeding_day)))
+                 ;; Fix data and orientation
+                 (dissoc (merge normal-data1
+                                {:orientation computed-orientation}) :line)
+                 ;; Fix only data, not orientation
+                 (dissoc normal-data1 :line))
+               (update :orientation fix-orientation)
+               (update :postal_code fix-postal_code)
+               (update :date fix-date)))
          (catch Exception e
            (println
             (format "Line %s: cannot apply algo %s because %s" line algo_version e))))
@@ -125,6 +170,13 @@
     {:header csv-header}
     (map #(fix-algo % orientation?) data))))
 
+(defn fix-bug [{:keys [suffix csv-file data]}]
+  (sc/spit-csv
+   (str csv-file suffix)
+   (sc/vectorize
+    {:header csv-header}
+    (map #(fix-algo-bug %) data))))
+
 (defn -main [opt & [input-csv-file]]
   (reset! errors nil)
   (condp = opt
@@ -148,6 +200,10 @@
     (fix {:suffix   "-fixed-data.csv"
           :csv-file input-csv-file
           :data     (csv-to-data input-csv-file)})
+    "fix-bug"
+    (fix-bug {:suffix   "-fixed-bug.csv"
+              :csv-file input-csv-file
+              :data     (csv-to-data input-csv-file)})
     "fix-algo"
     (fix {:suffix       "-fixed.csv"
           :csv-file     input-csv-file
