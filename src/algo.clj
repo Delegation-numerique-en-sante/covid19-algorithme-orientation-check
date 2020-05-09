@@ -219,7 +219,7 @@
     (cond (= pronostic-factors 0)
           (if (= minor-severity-factors 0)
             (if (= age_range "from_15_to_49")
-              "domicile_surveillance_1"
+              "home_surveillance"
               "consultation_surveillance_1")
             "consultation_surveillance_1")
           (>= pronostic-factors 1)
@@ -231,7 +231,7 @@
         (and (not cough) sore_throat_aches (not agueusia_anosmia))
         (and (not cough) (not sore_throat_aches) agueusia_anosmia))
     (if (= pronostic-factors 0)
-      "domicile_surveillance_1"
+      "home_surveillance"
       "consultation_surveillance_4")
     ;; Branche 6
     (and (not cough)
