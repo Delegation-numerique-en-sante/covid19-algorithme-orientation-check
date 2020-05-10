@@ -50,7 +50,7 @@
     "example" : "orientation_SAMU",
     "type" : "string",
     "constraints" : {
-      "enum" : [ "SAMU", "consultation_surveillance_1", "consultation_surveillance_2", "consultation_surveillance_3", "consultation_surveillance_4", "home_surveillance", "less_15", "surveillance" ],
+      "enum" : [ "SAMU", "consultation_surveillance_1", "consultation_surveillance_2", "consultation_surveillance_3", "consultation_surveillance_4", "less_15", "surveillance" ],
       "required" : true
     }
   }, {

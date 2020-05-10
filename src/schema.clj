@@ -4,8 +4,16 @@
 (def latest-schema-version "2020-05-10")
 
 (defn orientation [version]
-  (condp contains? version
-    #{"2020-04-29" "2020-05-10"}
+  (condp = version
+    "2020-05-10"
+    ["SAMU"
+     "consultation_surveillance_1"
+     "consultation_surveillance_2"
+     "consultation_surveillance_3"
+     "consultation_surveillance_4"
+     "less_15"
+     "surveillance"]
+    "2020-04-29"
     ["SAMU"
      "consultation_surveillance_1"
      "consultation_surveillance_2"
