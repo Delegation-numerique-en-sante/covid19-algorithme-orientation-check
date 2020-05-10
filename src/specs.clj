@@ -9,8 +9,8 @@
 (s/def ::algo_version
   (s/with-gen
     (s/and string? #(re-matches #"^\d{4}-\d{2}-\d{2}$" %))
-    ;; Only generate valid values for 2020-05-09:
-    #(s/gen #{"2020-05-09"})))
+    ;; Only generate valid values for 2020-05-10:
+    #(s/gen #{"2020-05-10"})))
 
 (s/def ::form_version ::algo_version)
 
@@ -27,9 +27,9 @@
 (s/def ::age_range
   (s/with-gen
     #{"inf_15" "from_15_to_49" "from_50_to_69" "sup_70"
-      ;; For version >= 2020-05-09:
+      ;; For version >= 2020-05-10:
       "from_50_to_64" "sup_65"}
-    ;; Only generate valid values for 2020-05-09:
+    ;; Only generate valid values for 2020-05-10:
     #(s/gen #{"inf_15" "from_15_to_49" "from_50_to_64" "sup_65"})))
 
 (s/def ::date
@@ -202,7 +202,7 @@
 (defn generate-response [version]
   (s/gen
    (condp contains? version
-     #{"2020-05-09"
+     #{"2020-05-10"
        "2020-04-29"
        "2020-04-17"} ::response-2020-04-17
      "2020-04-06"    ::response-2020-04-06
@@ -216,7 +216,7 @@
 
 (defn valid-response [r version]
   (condp contains? version
-    #{"2020-05-09"
+    #{"2020-05-10"
       "2020-04-29"
       "2020-04-17"} (s/valid? ::response-2020-04-17 r)
     "2020-04-06"    (s/valid? ::response-2020-04-06 r)

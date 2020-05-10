@@ -58,7 +58,7 @@
         pronostic-factors              (atom 0)]
     ;; Compute pronostic factors
     (when (= age_range
-             (if (= algo_version "2020-05-09") "sup_65" "sup_70"))
+             (if (= algo_version "2020-05-10") "sup_65" "sup_70"))
       (swap! pronostic-factors inc))
     (when (>= imc 30) (swap! pronostic-factors inc))
     (when heart_disease_algo (swap! pronostic-factors inc))

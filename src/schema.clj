@@ -1,11 +1,11 @@
 (ns schema
   (:require [cheshire.core :as json]))
 
-(def latest-schema-version "2020-05-09")
+(def latest-schema-version "2020-05-10")
 
 (defn orientation [version]
   (condp contains? version
-    #{"2020-04-29" "2020-05-09"}
+    #{"2020-04-29" "2020-05-10"}
     ["SAMU"
      "consultation_surveillance_1"
      "consultation_surveillance_2"
@@ -25,7 +25,7 @@
 
 (defn age-ranges [version]
   (condp = version
-    "2020-05-09" ["inf_15" "from_15_to_49" "from_50_to_64" "sup_65"]
+    "2020-05-10" ["inf_15" "from_15_to_49" "from_50_to_64" "sup_65"]
     ["inf_15" "from_15_to_49" "from_50_to_69" "sup_70"]))
 
 (defn schema [version]
@@ -294,7 +294,7 @@
 (def schemas {"2020-04-06" (schema "2020-04-06")
               "2020-04-17" (schema "2020-04-17")
               "2020-04-29" (schema "2020-04-29")
-              "2020-05-09" (schema "2020-05-09")})
+              "2020-05-10" (schema "2020-05-10")})
 
 (defn generate [& [version]]
   (spit "schema.json"
