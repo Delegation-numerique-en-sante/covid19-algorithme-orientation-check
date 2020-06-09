@@ -1,7 +1,7 @@
 {
   "description" : "Spécification des données issues des questionnaires d'orientation Covid-19",
   "homepage" : "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check",
-  "updated" : "2020-05-10",
+  "updated" : "2020-06-09",
   "fields" : [ {
     "name" : "algo_version",
     "description" : "Le numéro de version de l'algorithme d'orientation Covid-19",
@@ -269,19 +269,10 @@
       "required" : true
     }
   }, {
-    "name" : "immunosuppressant_drug",
-    "description" : "Traitement immunodépresseur",
-    "example" : "999",
-    "type" : "string",
-    "constraints" : {
-      "enum" : [ "0", "false", "1", "true", "999" ],
-      "required" : true
-    }
-  }, {
-    "name" : "immunosuppressant_drug_algo",
-    "description" : "Traitement immunodépresseur",
-    "example" : false,
+    "name" : "sickle_cell",
+    "description" : "Drépanocytose homozygote",
     "type" : "boolean",
+    "example" : "0",
     "trueValues" : [ "1", "true" ],
     "falseValues" : [ "0", "false" ],
     "constraints" : {
@@ -293,6 +284,6 @@
   "author" : "Délégation numérique en santé - ministère des Solidarités et de la Santé",
   "contributor" : "Direction interministérielle du numérique",
   "example" : "https://github.com/Delegation-numerique-en-sante/covid19-algorithme-orientation-check/blob/master/example.csv",
-  "version" : "2020-05-10",
+  "version" : "2020-06-09",
   "contact" : "mobilisation-covid@sante.gouv.fr"
 }
