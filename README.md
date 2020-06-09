@@ -1,10 +1,13 @@
 ## Schéma et validation des données issues des questionnaires d'orientation Covid-19
 
-Si votre solution d'orientation COVID-19 est référencée par le ministère des Solidarités et de la Santé, elle suite la [documentation de l'algorithme d'orientation Covid-19](https://delegation-numerique-en-sante.github.io/covid19-algorithme-orientation/).
+Si votre solution d'orientation Covid-19 est référencée par le ministère des Solidarités et de la Santé, elle suite la [documentation de l'algorithme d'orientation Covid-19](https://delegation-numerique-en-sante.github.io/covid19-algorithme-orientation/).
 
 Ce dépôt expose le **schéma de données** de cette documentation et propose un **outil de validation** des fichiers `csv` envoyés par les producteurs de données.
 
 Résumé des commandes:
+
+	# Générer le fichier .jar
+	~$ clj -A:jar
 
 	# Générer le schéma:
 	~$ java -cp covid19-check.jar clojure.main -m core make-schema
@@ -24,7 +27,7 @@ Les fichiers `csv` produits par votre solution doivent respecter [les instructio
 
 ## Exemples
 
-Ce dépôt contient un exemple de `csv` pour la dernière version du schéma, `2020-04-17-example.csv`.
+Ce dépôt contient un exemple de `csv` pour la dernière version du schéma, `example.csv`.
 
 ## Vous souhaitez publier des données anonymisées ?
 
