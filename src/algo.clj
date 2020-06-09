@@ -30,6 +30,7 @@
                                breathlessness
                                pregnant cancer diabetes
                                liver_disease kidney_disease
+                               sickle_cell
                                breathing_disease
                                fever
                                temperature_cat
@@ -65,6 +66,7 @@
     (when immunosuppressant_disease_algo (swap! pronostic-factors inc))
     (when immunosuppressant_drug_algo (swap! pronostic-factors inc))
     (when kidney_disease (swap! pronostic-factors inc))
+    (when sickle_cell (swap! pronostic-factors inc))
     (when liver_disease (swap! pronostic-factors inc))
     (when breathing_disease (swap! pronostic-factors inc))
     (when cancer (swap! pronostic-factors inc))
