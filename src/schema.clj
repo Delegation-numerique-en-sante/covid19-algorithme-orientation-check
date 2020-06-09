@@ -1,10 +1,18 @@
 (ns schema
   (:require [cheshire.core :as json]))
 
-(def latest-schema-version "2020-05-10")
+(def latest-schema-version "2020-06-09")
 
 (defn orientation [version]
   (condp = version
+    "2020-06-09"
+    ["SAMU"
+     "consultation_surveillance_1"
+     "consultation_surveillance_2"
+     "consultation_surveillance_3"
+     "consultation_surveillance_4"
+     "less_15"
+     "surveillance"]
     "2020-05-10"
     ["SAMU"
      "consultation_surveillance_1"
@@ -33,6 +41,7 @@
 
 (defn age-ranges [version]
   (condp = version
+    "2020-06-09" ["inf_15" "from_15_to_49" "from_50_to_64" "sup_65"]
     "2020-05-10" ["inf_15" "from_15_to_49" "from_50_to_64" "sup_65"]
     ["inf_15" "from_15_to_49" "from_50_to_69" "sup_70"]))
 
@@ -273,21 +282,31 @@
       :falseValues ["0" "false"]
       :constraints {:required true}}
 
-     {:name        "immunosuppressant_drug"
-      :description "Traitement immunodépresseur"
-      :example     "999"
-      :type        "string"
-      ;; 999 correspond à "Je ne sais pas"
-      :constraints {:enum     ["0" "false" "1" "true" "999"]
-                    :required true}}
+     (when (= version "2020-06-09")
+       {:name        "sickle_cell"
+        :description "Drépanocytose homozygote"
+        :type        "boolean"
+        :example     "0"
+        :trueValues  ["1" "true"]
+        :falseValues ["0" "false"]
+        :constraints {:required true}})
 
-     {:name        "immunosuppressant_drug_algo"
-      :description "Traitement immunodépresseur"
-      :example     false
-      :type        "boolean"
-      :trueValues  ["1" "true"]
-      :falseValues ["0" "false"]
-      :constraints {:required true}}
+     (when (not (= version "2020-06-09"))
+       {:name        "immunosuppressant_drug"
+        :description "Traitement immunodépresseur"
+        :example     "999"
+        :type        "string"
+        ;; 999 correspond à "Je ne sais pas"
+        :constraints {:enum     ["0" "false" "1" "true" "999"]
+                      :required true}}
+
+       {:name        "immunosuppressant_drug_algo"
+        :description "Traitement immunodépresseur"
+        :example     false
+        :type        "boolean"
+        :trueValues  ["1" "true"]
+        :falseValues ["0" "false"]
+        :constraints {:required true}})
 
      (when (= version "2020-04-29")
        {:name        "id"
@@ -302,7 +321,8 @@
 (def schemas {"2020-04-06" (schema "2020-04-06")
               "2020-04-17" (schema "2020-04-17")
               "2020-04-29" (schema "2020-04-29")
-              "2020-05-10" (schema "2020-05-10")})
+              "2020-05-10" (schema "2020-05-10")
+              "2020-06-09" (schema "2020-06-09")})
 
 (defn generate [& [version]]
   (spit "schema.json"

@@ -111,7 +111,7 @@
           "orientation_consultation_surveillance_3"
           (>= pronostic-factors 1)
           (if (< minor-severity-factors 2)
-            "orientation_consultation_surveillance_3"
+            "orientation_consultation_surveillance_4"
             "orientation_consultation_surveillance_2"))
     ;; Branche 4
     (or fever_algo
@@ -159,7 +159,7 @@
           "orientation_consultation_surveillance_3"
           (>= pronostic-factors 1)
           (if (< minor-severity-factors 2)
-            "orientation_consultation_surveillance_3"
+            "orientation_consultation_surveillance_4"
             "orientation_consultation_surveillance_2"))
     ;; Branche 4
     (or fever_algo
@@ -210,7 +210,7 @@
           "consultation_surveillance_3"
           (>= pronostic-factors 1)
           (if (< minor-severity-factors 2)
-            "consultation_surveillance_3"
+            "consultation_surveillance_4"
             "consultation_surveillance_2"))
     ;; Branche 4
     (or fever_algo
