@@ -118,6 +118,7 @@
 (s/def ::cancer ::myboolean)
 (s/def ::cough ::myboolean)
 (s/def ::diabetes ::myboolean)
+(s/def ::sickle_cell ::myboolean)
 (s/def ::diarrhea ::myboolean)
 (s/def ::feeding_day  ::myboolean)
 (s/def ::fever_algo ::myboolean)
@@ -199,11 +200,46 @@
                    ]
           :opt-un [::postal_code ::id]))
 
+(s/def ::response-2020-06-09
+  (s/keys :req-un [
+                   ::age_range
+                   ::agueusia_anosmia
+                   ::algo_version
+                   ::breathing_disease
+                   ::breathlessness
+                   ::cancer
+                   ::cough
+                   ::date
+                   ::duration
+                   ::diabetes
+                   ::diarrhea
+                   ::feeding_day
+                   ::fever_algo
+                   ::form_version
+                   ::heart_disease
+                   ::heart_disease_algo
+                   ::imc
+                   ::immunosuppressant_disease
+                   ::immunosuppressant_disease_algo
+                   ::immunosuppressant_drug
+                   ::immunosuppressant_drug_algo
+                   ::kidney_disease
+                   ::liver_disease
+                   ::orientation
+                   ::pregnant
+                   ::sore_throat_aches
+                   ::sickle_cell
+                   ::temperature_cat
+                   ::tiredness
+                   ::tiredness_details
+                   ]
+          :opt-un [::postal_code ::id]))
+
 (defn generate-response [version]
   (s/gen
    (condp contains? version
-     #{"2020-06-09"
-       "2020-05-10"
+     "2020-06-09"    ::response-2020-06-09
+     #{"2020-05-10"
        "2020-04-29"
        "2020-04-17"} ::response-2020-04-17
      "2020-04-06"    ::response-2020-04-06
@@ -217,6 +253,7 @@
 
 (defn valid-response [r version]
   (condp contains? version
+    "2020-06-09"    (s/valid? ::response-2020-06-09 r)
     #{"2020-05-10"
       "2020-04-29"
       "2020-04-17"} (s/valid? ::response-2020-04-17 r)
