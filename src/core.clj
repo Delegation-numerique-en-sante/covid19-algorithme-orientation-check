@@ -139,8 +139,7 @@
                  :agueusia_anosmia :sore_throat_aches
                  :diarrhea :diabetes :cancer
                  :breathing_disease :kidney_disease
-                 :sickle_cell
-                 :liver_disease :pregnant
+                 :liver_disease :pregnant :sickle_cell
                  :heart_disease :heart_disease_algo
                  :immunosuppressant_disease
                  :immunosuppressant_disease_algo

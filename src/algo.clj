@@ -28,9 +28,9 @@
                                tiredness tiredness_details
                                feeding_day
                                breathlessness
-                               pregnant cancer diabetes
+                               pregnant sickle_cell cancer
+                               diabetes
                                liver_disease kidney_disease
-                               sickle_cell
                                breathing_disease
                                fever
                                temperature_cat

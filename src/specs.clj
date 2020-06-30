@@ -227,8 +227,8 @@
                    ::liver_disease
                    ::orientation
                    ::pregnant
-                   ::sore_throat_aches
                    ::sickle_cell
+                   ::sore_throat_aches
                    ::temperature_cat
                    ::tiredness
                    ::tiredness_details
@@ -238,12 +238,11 @@
 (defn generate-response [version]
   (s/gen
    (condp contains? version
-     "2020-06-09"    ::response-2020-06-09
+     #{"2020-06-09"} ::response-2020-06-09
      #{"2020-05-10"
        "2020-04-29"
        "2020-04-17"} ::response-2020-04-17
-     "2020-04-06"    ::response-2020-04-06
-     nil?)))
+     #{"2020-04-06"} ::response-2020-04-06)))
 
 (defn generate-samples [version number]
   (or (->> (gen/sample (generate-response version) number)
@@ -253,9 +252,9 @@
 
 (defn valid-response [r version]
   (condp contains? version
-    "2020-06-09"    (s/valid? ::response-2020-06-09 r)
+    #{"2020-06-09"} (s/valid? ::response-2020-06-09 r)
     #{"2020-05-10"
       "2020-04-29"
       "2020-04-17"} (s/valid? ::response-2020-04-17 r)
-    "2020-04-06"    (s/valid? ::response-2020-04-06 r)
+    #{"2020-04-06"} (s/valid? ::response-2020-04-06 r)
     false))
