@@ -8,14 +8,15 @@
             [java-time :as t])
   (:gen-class))
 
-(def latest-algo-version "2020-05-10")
+(def latest-algo-version "2020-06-09")
 
 (def output-schema-filename "schema-errors.txt")
 (def output-algo-filename "algo-errors.csv")
 (def errors (atom nil))
 
 (def orientation-fns
-  {"2020-05-10" #'algo/orientation-2020-04-29
+  {"2020-06-09" #'algo/orientation-2020-04-29
+   "2020-05-10" #'algo/orientation-2020-04-29
    "2020-04-29" #'algo/orientation-2020-04-29
    "2020-04-17" #'algo/orientation-2020-04-17
    "2020-04-06" #'algo/orientation-2020-04-06})

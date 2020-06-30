@@ -202,7 +202,8 @@
 (defn generate-response [version]
   (s/gen
    (condp contains? version
-     #{"2020-05-10"
+     #{"2020-06-09"
+       "2020-05-10"
        "2020-04-29"
        "2020-04-17"} ::response-2020-04-17
      "2020-04-06"    ::response-2020-04-06
