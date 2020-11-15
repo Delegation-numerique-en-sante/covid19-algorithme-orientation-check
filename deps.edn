@@ -4,11 +4,11 @@
  :license     {:name "Eclipse Public License - v 2.0"
                :url  "http://www.eclipse.org/legal/epl-v20.html"}
  :deps
- {org.clojure/clojure    {:mvn/version "1.10.1"}
-  semantic-csv           {:mvn/version "0.2.0"}
-  cheshire               {:mvn/version "5.10.0"}
-  clojure.java-time      {:mvn/version "0.3.2"}
-  org.clojure/test.check {:mvn/version "1.0.0"}}
+ {org.clojure/clojure                 {:mvn/version "1.10.1"}
+  semantic-csv/semantic-csv           {:mvn/version "0.2.0"}
+  cheshire/cheshire                   {:mvn/version "5.10.0"}
+  clojure.java-time/clojure.java-time {:mvn/version "0.3.2"}
+  org.clojure/test.check              {:mvn/version "1.1.0"}}
  :aliases
  {:make-schema  {:main-opts ["-m core make-schema"]}
   :make-csv     {:main-opts ["-m core make-csv"]}
